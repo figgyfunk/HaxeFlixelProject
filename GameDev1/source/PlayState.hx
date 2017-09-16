@@ -10,8 +10,8 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
-        FlxG.sound.playMusic(AssetPaths.titleTheme__ogg, 1, false);
-        _music = FlxG.sound.music;
+        _music = FlxG.sound.load(AssetPaths.titleTheme__wav, 1, false);
+        _music.play();
         trace(_music.length);
 	}
 
