@@ -156,33 +156,75 @@ class EnemySoldier extends FlxSprite
 		var xVariance = Math.abs(_lastKnownPlayerX - getMidpoint().x);
 		var yVariance = Math.abs(_lastKnownPlayerY - getMidpoint().y);
 		if (xVariance < yVariance){
-			_lastKnownPlayerMidpoint = new FlxPoint(getMidpoint().x, _lastKnownPlayerX);
-			setPosition(getPosition().x, getPosition().y + runDist);
+			_lastKnownPlayerMidpoint = new FlxPoint(getMidpoint().x, _lastKnownPlayerY);
+			if (_lastKnownPlayerMidpoint.y > getMidpoint().y){
+				turnUp();
+				setPosition(getPosition().x, getPosition().y + runDist);
+			}
+			else{
+				turnDown();
+				setPosition(getPosition().x, getPosition().y - runDist);
+			}
 		}
 		else{//xVariance > yVariance
-			_lastKnownPlayerMidpoint = new FlxPoint(getMidpoint().y, _lastKnownPlayerY);
+			_lastKnownPlayerMidpoint = new FlxPoint(_lastKnownPlayerX, getMidpoint().y);
+			if (_lastKnownPlayerMidpoint.x > getMidpoint().x){
+				turnRight();
 			setPosition(getPosition().x + runDist, getPosition().y);
+			}
+			else{
+				turnLeft();
+				setPosition(getPosition().x - runDist, getPosition().y);
+			}
 		}
 	}
 	
 	function randomDirection():Void{
-		_up = false;
+		var direction int = FlxRandom.int(0, 3);
+		if (direction == 0){
+			turnUp();
+		}
+		else if (direction == 1){
+			turnDown();
+		}
+		else if (direction == 2){
+			turnLeft();
+		}
+		else{//direction == 3
+			turnRight();
+		}
+	}
+	
+	function turnUp():Void{
+		_up = true;
 		_down = false;
 		_left = false;
 		_right = false;
-		var direction int = FlxRandom.int(0, 3);
-		if (direction == 0){
-			facing = FlxObject.UP;
-		}
-		else if (direction == 1){
-			facing = FlxObject.DOWN;
-		}
-		else if (direction == 2){
-			facing = FlxObject.LEFT;
-		}
-		else{//direction == 3
-			facing = FlxObject.RIGHT;
-		}
+		facing= FlxObject.UP;
+	}
+	
+	function turnDown():Void{
+		_up = false;
+		_down = true;
+		_left = false;
+		_right = false;
+		facing= FlxObject.DOWN;
+	}
+	
+	function turnLeft():Void{
+		_up = false;
+		_down = false;
+		_left = true;
+		_right = false;
+		facing = FlxObject.LEFT;
+	}
+	
+	function turnRight():Void{
+		_up = false;
+		_down = false;
+		_left = false;
+		_right = true;
+		facing = FlxObject.RIGHT;
 	}
 	
 	//returns true if the 
