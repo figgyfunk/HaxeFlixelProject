@@ -15,14 +15,14 @@ import flixel.FlxObject;
  */
 class EnemySoldier extends FlxSprite
 {
-	var walkDist:Float = 10;
-	var runDist:Float = 20;
+	var walkDist:Float = 10; //pixels per second
+	var runDist:Float = 20; //pixels per second
 	var aimTime:Float = 2;
 	var shootCountdown:Float = aimTime;
 	var searchTime:Float = 2;
 	var searchCountdown:Float = searchTime;
-	var FOV_Distance:Float = 10;
-	var FOV_Angle:Float = 45;
+	var FOV_Distance:Float = 10; //coordinate distance
+	var FOV_Angle:Float = 45; //degrees
 	
 	var _player:FlxSprite;//reference to player
 	var _tilemap:FlxTilemap;//reference to tilemap
@@ -36,7 +36,7 @@ class EnemySoldier extends FlxSprite
 	var _right:Bool = false;
 
 	//arguments: reference to the player, tilemap, and a group of all walls in the level
-	public function new(FlxSprite player, FlxTilemap map, FlxGroup walls) 
+	public function new(Int startX, Int startY, FlxSprite player, FlxTilemap map, FlxGroup walls) 
 	{
 		super();
 		_player = player;
@@ -46,6 +46,7 @@ class EnemySoldier extends FlxSprite
 		//too add: image & animation adding
 		//setFacingFlip
 		
+		setPosition(startX, startY);
 		randomDirection();
 	}
 	
@@ -106,8 +107,8 @@ class EnemySoldier extends FlxSprite
 	//otherwise, changee to a random direction
 	//note: may change later
 	function patrol():Void{
-		var currentX:Float = getMidpoint().x;
-		var currentY:Float = getMidpoint().y;
+		var currentX:Float = this.
+		var currentY:Float = getPosition().y;
 		if (_up){
 			if (!overlapsAt(currentX, currentY + walkDist, _walls){
 				setPosition(currentX, currentY + walkDist);
@@ -147,7 +148,7 @@ class EnemySoldier extends FlxSprite
 		
 	}
 	
-	//place the last known player position so that it is inline vertically or horizontally with soldier
+	//place the last known player position so that it is in line vertically or horizontally with soldier
 	//then, move the soldier toward that point
 	function pursue():Void{
 		
@@ -157,22 +158,22 @@ class EnemySoldier extends FlxSprite
 		var yVariance = Math.abs(_lastKnownPlayerY - getMidpoint().y);
 		if (xVariance < yVariance){
 			_lastKnownPlayerMidpoint = new FlxPoint(getMidpoint().x, _lastKnownPlayerY);
-			if (_lastKnownPlayerMidpoint.y > getMidpoint().y){
+			if (_lastKnownPlayerMidpoint.y > getMidpoint().y){//last seen position is up
 				turnUp();
 				setPosition(getPosition().x, getPosition().y + runDist);
 			}
-			else{
+			else{//last seen position is down
 				turnDown();
 				setPosition(getPosition().x, getPosition().y - runDist);
 			}
 		}
 		else{//xVariance > yVariance
 			_lastKnownPlayerMidpoint = new FlxPoint(_lastKnownPlayerX, getMidpoint().y);
-			if (_lastKnownPlayerMidpoint.x > getMidpoint().x){
+			if (_lastKnownPlayerMidpoint.x > getMidpoint().x){//last seen position is right
 				turnRight();
 			setPosition(getPosition().x + runDist, getPosition().y);
 			}
-			else{
+			else{//last seen position is left
 				turnLeft();
 				setPosition(getPosition().x - runDist, getPosition().y);
 			}
