@@ -9,6 +9,7 @@ class PlayState extends FlxState
 {
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
+	private var _wallGroup:FlxTypedGroup<Wall>;
 	override public function create():Void
 	{
 		//copy this with correct file names to load levels
@@ -16,6 +17,7 @@ class PlayState extends FlxState
 		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "wall");
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
+		add(_wallGroup);
 		super.create();
 	}
 
@@ -23,5 +25,15 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 	}
+
+	private function placeEntities(entityName:String, entityData:Xml):Void
+{
+		var x:Int = Std.parseInt(entityData.get("x"));
+		var y:Int = Std.parseInt(entityData.get("y"));
+		if (entityName == "wallCol")
+		{
+				_wallGroup.add(new Wall(x+4, y+4))
+		}
+}
 
 }
