@@ -1,19 +1,20 @@
 package;
 
 import flixel.FlxState;
+import flixel.FlxObject;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.tile.FlxTilemap;
-import flixel.FlxObject;
 
 class PlayState extends FlxState
 {
-
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
 	override public function create():Void
 	{
-		_map = new FlxOgmoLoader(AssetPaths.level1_tight__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "wall");
+		//copy this with correct file names to load levels
+		_map = new FlxOgmoLoader(AssetPaths.level1__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "wall");
+		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		super.create();
 	}
@@ -22,4 +23,5 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 	}
+
 }
