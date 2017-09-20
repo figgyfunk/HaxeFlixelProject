@@ -19,7 +19,7 @@ class EnemySoldier extends FlxSprite
 	var runSpeed:Float = 20; //pixels per second
 	var FOV_Distance:Float = 10; //coordinate distance
 	var FOV_Angle:Float = 45; //degrees
-	var _arriveTolerance = 50;
+	var _arriveTolerance:Float = 50;
 
 	var aimTime:Float = 2; //time it takes for the soldier to aim and shoot the player
 	var patrolIdleTime:Float = 3; //time turing patrol that the soldier will stand sill before changing direction
@@ -27,21 +27,21 @@ class EnemySoldier extends FlxSprite
 	var pursueIdleTime:Float = 3; //time that the soldier will stay at the player's last known location
 	var pursueTurnTime:Float = 1; //time between turns while the soldier is at last known player location
 	var backtrackAddTime:Float = 3;//time between adding points to the backtrack path
-	var aimCountdown:Float = aimTime;
-	var patrolIdleCountdown:Float = patrolIdleTime;
-	var patrolTurnCountdown:Float = patrolTurnTime; 
-	var pursueIdleCountdown:Float = pursueIdleTime;
-	var pursueTurnCountdown:Float = pursueTurnTime; 
-	var backtrackAddCountdown:Float = backtrackAddTime;
+	var aimCountdown:Float;
+	var patrolIdleCountdown:Float;
+	var patrolTurnCountdown:Float; 
+	var pursueIdleCountdown:Float;
+	var pursueTurnCountdown:Float; 
+	var backtrackAddCountdown:Float;
 	
 	var _player:FlxSprite;//reference to player
 	var _tilemap:FlxTilemap;//reference to tilemap
-	var _path:Array;//reference to points
+	var _path:Array<FlxPoint>;//reference to points
 	var _moveTowardIndex:Int;
 	
 	var onAlert = false;
-	var _lastKnownPlayerMidpoint:FlxPoint;
-	var _backtrackPath:Array;
+	var _lastKnownPlayerPosition:FlxPoint;
+	var _backtrackPath:Array<FlxPoint>;
 	
 	var _up:Bool = false;
 	var _down:Bool = false;
@@ -60,7 +60,7 @@ class EnemySoldier extends FlxSprite
 	 * 						from the previous one. i.e path[i].x == path[i+1].x OR path[i].y == path[i+1].y
 	 * 						This must also be true for the last and first points in the array.
 	 * */
-	public function new(FlxSprite player, FlxTilemap map, Array path) 
+	public function new(player:FlxSprite, map:FlxTilemap, path:Array<FlxPoint>) 
 	{
 		super();
 		_player = player;
@@ -68,11 +68,21 @@ class EnemySoldier extends FlxSprite
 		_path = path;
 		
 		_moveTowardIndex = 0;
+		_backtrackPath = new Array<FlxPoint>();
+		
+		aimCountdown = aimTime;
+		patrolIdleCountdown = patrolIdleTime;
+		patrolTurnCountdown = patrolTurnTime; 
+		pursueIdleCountdown = pursueIdleTime;
+		pursueTurnCountdown = pursueTurnTime; 
+		backtrackAddCountdown = backtrackAddTime;
 		
 		//too add: image & animation adding
 		//setFacingFlip
 		
-		setPosition(path[0].x, path[0].y);
+		setPosition(_path[0].x, _path[0].y);
+		
+		drag.x = drag.y = 2000;
 	}
 	
 	override public function update(elapsed:Float):Void{
@@ -88,11 +98,12 @@ class EnemySoldier extends FlxSprite
 			//set this soldier's behavior to the chasing behavior
 			if (canSeePlayerCone()){
 				onAlert = true;
-				_lastKnownPlayerMidpoint = _player.getMidpoint();
+				_lastKnownPlayerPosition = _player.getPosition();
 				_backtrackPath.push(getPosition());
 			}
+			//if the player needs to return to it's patrol bath,
+			//follow the packtrack path
 			else if (_backtrackPath.length > 0){
-				//need: get the rotation required to set velocity in a point's direction
 				backtrack();
 			}
 			//if the player is not in sight
@@ -105,7 +116,7 @@ class EnemySoldier extends FlxSprite
 		else{
 			
 			//record soldier's location every 'backtrackAddTime' seconds
-			backtrackAddCountdown -= FlxG.timescale;
+			backtrackAddCountdown -= FlxG.timeScale;
 			if (backtrackAddCountdown <= 0){
 				backtrackAddCountdown = backtrackAddTime;
 				
@@ -115,7 +126,7 @@ class EnemySoldier extends FlxSprite
 			//if the player is in sight,
 			//the soldier is stationary while counting down to shoot
 			if (canSeePlayer360()){
-				_lastKnownPlayerMidpoint = _player.getMidpoint();
+				_lastKnownPlayerPosition = _player.getPosition();
 				aim();
 			}
 			//if the player is out of sight
@@ -137,10 +148,10 @@ class EnemySoldier extends FlxSprite
 		backtrackAddCountdown = backtrackAddTime;
 		
 		//if we are on a node specified by path..
-		if ( withinTolerance( path[_moveTowardIndex], getPosition() ) ){
+		if ( withinTolerance( _path[_moveTowardIndex] ) ){
 			
 			//while idle, the soldier turns in a random direction every 'patrolTurnTime' seconds
-			patrolTurnCountdown -= FlxG.timescale;
+			patrolTurnCountdown -= FlxG.timeScale;
 			if (patrolTurnCountdown <= 0){
 				patrolTurnCountdown = patrolTurnTime;
 				
@@ -148,7 +159,7 @@ class EnemySoldier extends FlxSprite
 			}
 			
 			//after idle for 'patrolIdleTime' seconds, turn toward the next point in the path and start moving toward it
-			patrolIdleCountdown -= FlxG.timescale;
+			patrolIdleCountdown -= FlxG.timeScale;
 			if (patrolIdleCountdown <= 0){
 				patrolIdleCountdown = patrolIdleTime;
 				
@@ -170,7 +181,7 @@ class EnemySoldier extends FlxSprite
 		
 	}
 	
-	function backtrack(){
+	function backtrack():Void{
 		
 		aimCountdown= aimTime;
 		patrolIdleCountdown = patrolIdleTime;
@@ -182,7 +193,7 @@ class EnemySoldier extends FlxSprite
 		var destination:FlxPoint = _backtrackPath[_backtrackPath.length-1];
 		
 		//if at the most recent backtrack location
-		if ( withinTolerance(getPosition(), destination) ){
+		if ( withinTolerance(destination) ){
 			_backtrackPath.pop();
 		}
 		else{
@@ -190,7 +201,7 @@ class EnemySoldier extends FlxSprite
 			turnToward(destination);
 			
 			//to check: degrees gets proper angle measurment
-			var travelVector:FlxVector = destination.toVector() - getPosition().toVector();
+			var travelVector:FlxVector = destination.toVector().subtractNew( getPosition().toVector() );
 			var moveAngle:Float = travelVector.degrees;
 			velocity.set(walkSpeed);
 			velocity.rotate(new FlxPoint(0, 0), moveAngle);
@@ -206,7 +217,7 @@ class EnemySoldier extends FlxSprite
 		pursueTurnCountdown = pursueTurnTime; 
 		//backtrackAddCountdown = backtrackAddTime;
 		
-		aimCountdown -= FlxG.timescale;
+		aimCountdown -= FlxG.timeScale;
 		if (aimCountdown <= 0){
 			aimCountdown = aimTime;
 			//to add: kill player
@@ -225,10 +236,10 @@ class EnemySoldier extends FlxSprite
 		//backtrackAddCountdown = backtrackAddTime;
 		
 		//if we are at the last know player midpoint
-		if ( withinTolerance(getMidpoint(), _lastKnownPlayerMidpoint) ){
+		if ( withinTolerance(_lastKnownPlayerPosition) ){
 			
 			//look around every 'pursueTurnTime' seconds
-			pursueTurnCountdown -= FlxG.timescale;
+			pursueTurnCountdown -= FlxG.timeScale;
 			if (pursueTurnCountdown <= 0){
 				pursueTurnCountdown = pursueTurnTime;
 				
@@ -236,7 +247,7 @@ class EnemySoldier extends FlxSprite
 			}
 			
 			//after idle for 'pursueIdleCountdown' seconds, return to the patrol behavior
-			pursueIdleCountdown -= FlxG.timescale;
+			pursueIdleCountdown -= FlxG.timeScale;
 			if (pursueIdleCountdown <= 0){
 				pursueIdleCountdown = pursueIdleTime;
 				
@@ -249,10 +260,10 @@ class EnemySoldier extends FlxSprite
 			pursueIdleCountdown = pursueIdleTime;
 			pursueTurnCountdown = pursueTurnTime;
 			
-			turnToward(_lastKnownPlayerMidpoint);
+			turnToward(_lastKnownPlayerPosition);
 			
 			//to check: degrees gets proper angle measurment
-			var travelVector:FlxVector = _lastKnownPlayerMidpoint.toVector() - getMidpoint().toVector();
+			var travelVector:FlxVector = _lastKnownPlayerPosition.toVector().subtractNew( getPosition().toVector() );
 			var moveAngle:Float = travelVector.degrees;
 			velocity.set(runSpeed);
 			velocity.rotate(new FlxPoint(0,0), moveAngle);
@@ -285,10 +296,10 @@ class EnemySoldier extends FlxSprite
 	
 	//todo: find proper facing vectors and make sure angle measuring is correct
 	//returns true if the soldier can see the player within its FOV angle
-	function canSeePlayerCone(){
+	function canSeePlayerCone():Bool{
 		//if the player is outside the soldier's viewAngle pointing where the soldier is facing,
 		//return false
-		var directionVec:FlxVector = new FlxVector(_player.getMidpoint().x - getMidpoint().x, _player.getMidpoint().y - getMidpoint().y).normalize();
+		var directionVec:FlxVector = _player.getMidpoint().toVector().subtractNew( getMidpoint().toVector() );
 		var facingVec;
 		if (this.facing == FlxObject.UP){
 			facingVec = new FlxVector(0, -1);
@@ -299,7 +310,7 @@ class EnemySoldier extends FlxSprite
 		if (this.facing == FlxObject.LEFT){
 			facingVec = new FlxVector(-1, 0);
 		}
-		else{
+		else{//facing right
 			facingVec = new FlxVector(1, 0);
 		}
 		
@@ -311,11 +322,18 @@ class EnemySoldier extends FlxSprite
 		return canSeePlayer360();
 	}
 	
-	function withinTolerance(FlxPoint a, FlxPoint b):Void{
-		return FlxPoint.distanceTo(a, b) <= arriveTolerance;
+	//if the player's position is within 'arriveTolerance' of 'point'
+	//set it position to that point and return true
+	//return false otherwise
+	function withinTolerance(point:FlxPoint):Bool{
+		if (getPosition().distanceTo(point) <= _arriveTolerance){
+			setPosition(point.x, point.y);
+			return true;
+		}
+		return false;
 	}
 	
-	function turnToward(FlxPoint dest):Void{
+	function turnToward(dest:FlxPoint):Void{
 		
 		if (isUp(dest)){
 			turnUp();
@@ -327,12 +345,13 @@ class EnemySoldier extends FlxSprite
 			turnLeft();
 		}
 		if (isRight(dest)){
-			turnRigth();
+			turnRight();
 		}
 	}
 	
 	function randomDirection():Void{
-		var direction int = FlxRandom.int(0, 3);
+		var rand:FlxRandom = new FlxRandom();
+		var direction:Int = rand.int(0, 3);
 		if (direction == 0){
 			turnUp();
 		}
@@ -385,28 +404,28 @@ class EnemySoldier extends FlxSprite
 	
 	//todo: check coordinate system
 	//true if point is above this object's location
-	function isUp(FlxPoint point):Bool{
+	function isUp(point:FlxPoint):Bool{
 		var xVariance:Float = Math.abs(point.x - this.x);
 		var yVariance:Float = Math.abs(point.y - this.y);
 		return (yVariance > xVariance) && (this.y > point.y);
 	}
 	
 	//true if point is below this object's location
-	function isDown(FlxPoint point):Bool{
+	function isDown(point:FlxPoint):Bool{
 		var xVariance:Float = Math.abs(point.x - this.x);
 		var yVariance:Float = Math.abs(point.y - this.y);
 		return (yVariance > xVariance) && (this.y < point.y);
 	}
 	
 	//true if point is to the left of this object's location
-	function isLeft(FlxPoint point):Bool{
+	function isLeft(point:FlxPoint):Bool{
 		var xVariance:Float = Math.abs(point.x - this.x);
 		var yVariance:Float = Math.abs(point.y - this.y);
 		return (xVariance > yVariance) && (this.x < point.x);
 	}
 	
 	//true if point is to the right of this object's location
-	function isRight(FlxPoint point):Bool{
+	function isRight(point:FlxPoint):Bool{
 		var xVariance:Float = Math.abs(point.x - this.x);
 		var yVariance:Float = Math.abs(point.y - this.y);
 		return (xVariance > yVariance) && (this.x > point.x);

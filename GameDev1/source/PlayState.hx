@@ -19,15 +19,16 @@ class PlayState extends FlxState
 	{
 		//copy this with correct file names to load levels
 
-		_map = new FlxOgmoLoader(AssetPaths.level__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "wall");
+		_map = new FlxOgmoLoader(AssetPaths.BoxTest__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "Wall");
 		_mWalls.setTileProperties(2, FlxObject.ANY);
-		_wallGroup = new FlxTypedGroup<Wall>();
-		add(_wallGroup);
-		_map.loadEntities(placeEntities, "entities");
+		//_wallGroup = new FlxTypedGroup<Wall>();
+		//add(_wallGroup);
+		//_map.loadEntities(placeEntities, "entities");
 		add(_mWalls);
-
-		_soldier01 = new EnemySoldier(
+		
+		_player = new Player(50, 50, _mWalls);
+		add(_player);
 
 		super.create();
 	}
@@ -43,7 +44,7 @@ class PlayState extends FlxState
 		var y:Int = Std.parseInt(entityData.get("y"));
 		if (entityName == "wallCol")
 		{
-				_wallGroup.add(new Wall(x+4, y+4));
+			_wallGroup.add(new Wall(x+4, y+4));
 		}
 	}
 
