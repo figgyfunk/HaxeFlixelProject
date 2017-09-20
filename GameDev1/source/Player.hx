@@ -10,6 +10,7 @@ import flixel.tile.FlxTilemap;
 
 class Player extends FlxSprite {
 	var _walls:FlxTilemap;
+	public var playermap:PlayerMap;
 	
 	public var _rot:Float = 0;
 	var _up:Bool = false;
@@ -26,6 +27,7 @@ class Player extends FlxSprite {
 	var spriteheight:Int = 57;
 	
 	var visionradius:Int = 200;
+	var tilesize:Int = 16;
 
 	public function new(startX:Int, startY:Int, walls:FlxTilemap) {
 		super();
@@ -39,12 +41,15 @@ class Player extends FlxSprite {
 		animation.add("stand", [0], 2, true);
 		
 		setPosition(startX, startY);
+		
+		playermap = new PlayerMap(Std.int(1024 / tilesize), Std.int(768 / tilesize));
 	}
 	
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 		poll();
 		movement();
+		detect();
 	}
 	
 	function poll():Void {
@@ -75,7 +80,7 @@ class Player extends FlxSprite {
 			}
 			
 			//check if there is something ahead of direction
-			pathblocked = overlapsAt(x + (xspeed / 60), y + (yspeed / 60), _walls);
+			//pathblocked = overlapsAt(x + (xspeed / 60), y + (yspeed / 60), _walls);
 			
 			//calculate rotation angle
 			_rot = FlxAngle.angleBetweenPoint(this, new FlxPoint(x + xspeed + (spritewidth / 2), y + yspeed + (spriteheight / 2)), true);
@@ -89,15 +94,23 @@ class Player extends FlxSprite {
 			}
 			
 			//move it!
-			if (!pathblocked) {
-				velocity.set(speed, 0);
-			}
-			velocity.rotate(new FlxPoint(0,0), _rot);
+			velocity.set(speed, 0);
+			velocity.rotate(new FlxPoint(0, 0), _rot);
+			FlxG.collide(this, _walls);
 			animation.play("walk");
 		}
 		else {
 			velocity.set(0, 0);
 			animation.play("stand");
+		}
+	}
+	
+	//Checks for objects in the player's circle of view
+	function detect():Void {
+		for (i in Std.int((x - visionradius) / tilesize)...Std.int((x + visionradius) / tilesize)) {
+			for (j in Std.int((y - visionradius) / tilesize)...Std.int((y + visionradius) / tilesize)) {
+				playermap.setpixel(Std.int(i), Std.int(j), 1);
+			}
 		}
 	}
 }
