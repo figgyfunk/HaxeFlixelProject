@@ -56,19 +56,22 @@ class PlayState extends FlxState {
 		playercam.follow(player, FlxCameraFollowStyle.TOPDOWN);
 		FlxG.cameras.add(playercam);
 		
+		/*
 		canvas = new FlxSprite();
 		canvas.makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT, true);
 		add(canvas);
+		*/
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 		//debugtext.text = Std.string(player._rot);
-		debugtext.text = Std.string(player.playermap.map);
+		//debugtext.text = Std.string(player.playermap.map);
+		debugtext.text = Std.string(player.invisible) + " " + Std.string(player.duration) + " " + Std.string(player.cooldown);
 		
 		var lineStyle:LineStyle = {color: FlxColor.RED, thickness: 1};
 		var drawStyle:DrawStyle = {smoothing: true};
-		canvas.drawCircle(0, 0, 10, FlxColor.GREEN, lineStyle, drawStyle);
+		//canvas.drawCircle(0, 0, 10, FlxColor.GREEN, lineStyle, drawStyle);
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void {
