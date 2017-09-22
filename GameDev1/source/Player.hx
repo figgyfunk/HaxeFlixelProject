@@ -68,15 +68,19 @@ class Player extends FlxSprite {
 			//combine speeds of input directions, also check if there is something blocking in the path
 			if (_left) {
 				xspeed -= speed;
+				facing = FlxObject.LEFT;
 			}
 			if (_right) {
 				xspeed += speed;
+				facing= FlxObject.RIGHT;
 			}
 			if (_up) {
 				yspeed -= speed;
+				facing= FlxObject.UP;
 			}
 			if (_down) {
 				yspeed += speed;
+				facing= FlxObject.DOWN;
 			}
 			
 			//check if there is something ahead of direction
@@ -85,6 +89,7 @@ class Player extends FlxSprite {
 			//calculate rotation angle
 			_rot = FlxAngle.angleBetweenPoint(this, new FlxPoint(x + xspeed + (spritewidth / 2), y + yspeed + (spriteheight / 2)), true);
 			
+			/*
 			//flip sprite when moving left/right
 			if (_rot < 90 && _rot > -90) {
 				facing = FlxObject.RIGHT;
@@ -92,6 +97,7 @@ class Player extends FlxSprite {
 			else if (_rot > 90 || _rot < -90) {
 				facing = FlxObject.LEFT;
 			}
+			*/
 			
 			//move it!
 			velocity.set(speed, 0);

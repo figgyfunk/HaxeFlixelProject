@@ -10,6 +10,8 @@ import flixel.tile.FlxTilemap;
 import flixel.FlxObject;
 import flixel.text.FlxText;
 import flixel.FlxState;
+import flixel.math.FlxVelocity;
+import flixel.math.FlxMath;
 
 /**
  * ...
@@ -43,13 +45,16 @@ class EnemySoldier extends FlxSprite
 	
 	var onAlert = false; //true if pursuing or aiming. False if patrolling or backtracking
 	var _lastKnownPlayerPosition:FlxPoint;
+	var _lastKnownPlayerDirection:FlxPoint;
 	var _backtrackPath:Array<FlxPoint>;
 	
-	var _rot:Float = 0;
+	var _faceRot:Float = 0;
+	var _velRot:Float = 0;
 	
-	var actionText:FlxText = new FlxText(10, 10, 300, "Debug Text");
-	var facingText:FlxText = new FlxText(10, 30, 300, "Facing Text");
-	var rotText:FlxText = new FlxText(10, 50, 300, "Rotation Text");
+	var actionText:FlxText = new FlxText(10, 10, 300, "Debug Text");//debug
+	var facingText:FlxText = new FlxText(10, 30, 300, "Facing Text");//debug
+	var faceRotText:FlxText = new FlxText(10, 50, 300, "Facing Rotation Text");//debug
+	var velRotText:FlxText = new FlxText(10, 70, 300, "Velocity Rotation Text");//debug
 	var _state:FlxState;
 
 	/*
@@ -89,7 +94,8 @@ class EnemySoldier extends FlxSprite
 		_state = state;//debug
 		_state.add(actionText);//debug
 		_state.add(facingText);//debug
-		_state.add(rotText);//debug
+		_state.add(faceRotText);//debug
+		_state.add(velRotText);//debug
 	}
 	
 	override public function update(elapsed:Float):Void{
@@ -137,6 +143,7 @@ class EnemySoldier extends FlxSprite
 			if (canSeePlayerCone()){
 				actionText.text = "aiming";//debug
 				_lastKnownPlayerPosition = _player.getPosition();
+				_lastKnownPlayerDirection = FlxVelocity.velocityFromFacing(_player, FlxMath.MAX_VALUE_FLOAT);
 				aim();
 			}
 			//if the player is out of sight
@@ -148,7 +155,8 @@ class EnemySoldier extends FlxSprite
 			}
 		}
 		
-		rotText.text = Std.string(_rot);//debug
+		velRotText.text = Std.string(_velRot);//debug
+		faceRotText.text = Std.string(_faceRot);//debug
 	}
 	
 	//walk along the path given by the _path variable
@@ -182,7 +190,7 @@ class EnemySoldier extends FlxSprite
 			//turn toward that point and move toward it
 			turnToward(_path[_moveTowardIndex]);
 			velocity.set(walkSpeed);
-			velocity.rotate(new FlxPoint(0, 0), _rot);
+			velocity.rotate(new FlxPoint(0, 0), _velRot);
 			
 			animation.play("walk");
 		}
@@ -208,7 +216,7 @@ class EnemySoldier extends FlxSprite
 			
 			turnToward(destination);
 			velocity.set(walkSpeed);
-			velocity.rotate(new FlxPoint(0, 0), _rot);
+			velocity.rotate(new FlxPoint(0, 0), _velRot);
 		}
 		
 		animation.play("walk");
@@ -248,6 +256,10 @@ class EnemySoldier extends FlxSprite
 		//if we are at the last know player location
 		if ( arrivedAt(_lastKnownPlayerPosition) ){
 			
+			if (_lastKnownPlayerDirection != null){
+				turnToward(_lastKnownPlayerDirection);
+				_lastKnownPlayerDirection = null;
+			}
 			//look around every 'pursueTurnTime' seconds
 			pursueTurnCountdown -= FlxG.elapsed;
 			if (pursueTurnCountdown <= 0){
@@ -274,7 +286,7 @@ class EnemySoldier extends FlxSprite
 			
 			turnToward(_lastKnownPlayerPosition);
 			velocity.set(runSpeed);
-			velocity.rotate(new FlxPoint(0, 0), _rot);
+			velocity.rotate(new FlxPoint(0, 0), _velRot);
 			
 			animation.play("walk");
 		}
@@ -310,7 +322,7 @@ class EnemySoldier extends FlxSprite
 		//if the player is outside the soldier's viewAngle pointing where the soldier is facing,
 		//return false
 		var directionVec:FlxVector = _player.getMidpoint().toVector().subtractNew( getMidpoint().toVector() );
-		var facingVec = new FlxVector( Math.cos(_rot * Math.PI / 180), Math.sin(_rot* Math.PI / 180) );
+		var facingVec = new FlxVector( Math.cos(_faceRot * Math.PI / 180), Math.sin(_faceRot* Math.PI / 180) );
 		
 		var angleBetween:Float = directionVec.degreesBetween(facingVec);
 		if (angleBetween > FOV_Angle){
@@ -360,12 +372,12 @@ class EnemySoldier extends FlxSprite
 			faceRight();
 		}
 		
-		_rot = getVectorTo(dest).degrees;
-		while (_rot > 360){
-			_rot -= 360;
+		_velRot = getVectorTo(dest).degrees;
+		while (_velRot > 360){
+			_velRot -= 360;
 		}
-		while (_rot < 0){
-			_rot += 360;
+		while (_velRot < 0){
+			_velRot += 360;
 		}
 	}
 	
@@ -375,40 +387,40 @@ class EnemySoldier extends FlxSprite
 		var direction:Int = rand.int(0, 3);
 		if (direction == 0){
 			faceUp();
-			_rot = 270;
 		}
 		else if (direction == 1){
 			faceDown();
-			_rot = 90;
 		}
 		else if (direction == 2){
 			faceLeft();
-			_rot = 180;
 		}
 		else{//direction == 3
 			faceRight();
-			_rot = 0;
 		}
 	}
 	
 	function faceUp():Void{
 		facing = FlxObject.UP;
-		facingText.text = "Face Up";
+		_faceRot = 270;
+		facingText.text = "Face Up";//debug
 	}
 	
 	function faceDown():Void{
 		facing = FlxObject.DOWN;
-		facingText.text = "Face Down";
+		_faceRot = 90;
+		facingText.text = "Face Down";//debug
 	}
 	
 	function faceLeft():Void{
 		facing = FlxObject.LEFT;
-		facingText.text = "Face Left";
+		_faceRot = 180;
+		facingText.text = "Face Left";//debug
 	}
 	
 	function faceRight():Void{
 		facing = FlxObject.RIGHT;
-		facingText.text = "Face Right";
+		_faceRot = 0;
+		facingText.text = "Face Right";//debug
 	}
 	
 	//true if point is above this object's location
