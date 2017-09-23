@@ -11,7 +11,7 @@ import flixel.FlxG;
 import flixel.math.FlxPoint;
 
 
-class PlayState extends FlxState
+class Play2State extends FlxState
 {
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
@@ -28,7 +28,7 @@ class PlayState extends FlxState
 	{
 		//copy this with correct file names to load levels
 
-		_map = new FlxOgmoLoader(AssetPaths.fog_2__oel);
+		_map = new FlxOgmoLoader(AssetPaths.fog_1__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
@@ -37,11 +37,10 @@ class PlayState extends FlxState
 		add(_mWalls);
 		_fogGroup = new FlxTypedGroup<Fog>();
 		add(_fogGroup);
+
 		_map.loadEntities(placeEntities, "fog");
 		_map.loadEntities(placeEntities, "warpPad");
-		add(_warpPad);
-
-
+    add(_warpPad);
 
 		_player = new Player(20, 20, _mWalls);
 		add(_player);
@@ -100,7 +99,7 @@ private function playerTouchFog(P:Player, F:Fog):Void
 
 private function changeStage(P:Player, W:WarpPad) : Void {
 		if(_proceed){
-			FlxG.switchState(new Play2State());
+			FlxG.switchState(new PlayState());
 		}
 
 }
