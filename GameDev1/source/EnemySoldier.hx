@@ -38,6 +38,9 @@ class EnemySoldier extends FlxSprite
 	var pursueTurnCountdown:Float; 
 	var backtrackAddCountdown:Float;
 	
+	var spriteWidth:Int = 75;
+	var spriteHeight:Int = 75;
+	
 	var _player:Player;
 	var _tilemap:FlxTilemap;
 	var _path:Array<FlxPoint>;
@@ -81,7 +84,7 @@ class EnemySoldier extends FlxSprite
 		pursueTurnCountdown = pursueTurnTime; 
 		backtrackAddCountdown = backtrackAddTime;
 		
-		loadGraphic("assets/images/soldier/sentry_sheet.png", true, 75, 75);//temp animations
+		loadGraphic("assets/images/soldier/sentry_sheet.png", true, spriteWidth, spriteHeight);//temp animations
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
 		setFacingFlip(FlxObject.UP, false, false);
@@ -113,6 +116,12 @@ class EnemySoldier extends FlxSprite
 	}
 	
 	function movement():Void{
+		
+		//if player touches enemy, player dies
+		if ( FlxG.overlap(this, _player) ){
+			_player.die();
+		}
+		
 		//on normal patrol
 		if (!onAlert){
 			
