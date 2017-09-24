@@ -38,7 +38,7 @@ class EnemySoldier extends FlxSprite
 	var pursueTurnCountdown:Float; 
 	var backtrackAddCountdown:Float;
 	
-	var _player:FlxSprite;
+	var _player:Player;
 	var _tilemap:FlxTilemap;
 	var _path:Array<FlxPoint>;
 	var _moveTowardIndex:Int;
@@ -65,7 +65,7 @@ class EnemySoldier extends FlxSprite
 	 * 				The soldier will travel from the first point to the second and so on. When it reaches the
 	 * 				end of the array, it will travel back to the first point.
 	 * */
-	public function new(player:FlxSprite, map:FlxTilemap, path:Array<FlxPoint>, state:FlxState) 
+	public function new(player:Player, map:FlxTilemap, path:Array<FlxPoint>, state:FlxState) 
 	{
 		super();
 		_player = player;
@@ -239,13 +239,13 @@ class EnemySoldier extends FlxSprite
 		
 		turnToward(_player.getMidpoint());
 		
-		/*
+		//if the soldier has been aiming for 
 		aimCountdown -= FlxG.elapsed;
 		if (aimCountdown <= 0){
 			aimCountdown = aimTime;
-			//to add: kill player
+			
+			_player.die();
 		}
-		*/
 		
 		playLockAnimation();
 	}
@@ -296,21 +296,7 @@ class EnemySoldier extends FlxSprite
 		playIdleAnimation();
 	}
 	
-	//returns true if the soldier can see the player from any direction
-	function canSeePlayer360():Bool{
-		
-		//if the player is invisible. return false
-		/*
-		if (_player.isInvisible()){
-			return false;
-		}
-		*/
-		
-		//if a ray cannot travel from soldier to player's midpoint without hitting anything,
-		//return false
-		if ( !_tilemap.ray(getMidpoint(), _player.getMidpoint()) ){
-			return false;
-		}
+	function playerWithinFOVDistance(){
 		
 		//if the distance from the soldier to the player is greater than the viewDistance,
 		//return false
@@ -319,9 +305,26 @@ class EnemySoldier extends FlxSprite
 			return false;
 		}
 		
+		return true;
+	}
+	
+	//returns true if the soldier can see the player from any direction
+	function canSeePlayer360():Bool{
+		
+		//if the player is invisible. return false
+		if (_player.isInvisible()){
+			return false;
+		}
+		
+		//if a ray cannot travel from soldier to player's midpoint without hitting anything,
+		//return false
+		if ( !_tilemap.ray(getMidpoint(), _player.getMidpoint()) ){
+			return false;
+		}
+		
 		//if all conditions for player being unseen fail to be true,
 		//return true
-		return true;
+		return playerWithinFOVDistance();
 	}
 	
 	//todo: find proper facing vectors and make sure angle measuring is correct
@@ -480,6 +483,24 @@ class EnemySoldier extends FlxSprite
 		}
 		else{
 			animation.play("lock_side");
+		}
+	}
+	
+	function normalSpeech():Void{
+		if (!onAlert && playerWithinFOVDistance()){
+			
+		}
+	}
+	
+	function chaseSpeech():Void{
+		if (onAlert && canSeePlayerCone()){
+			
+		}
+	}
+	
+	function searchSpeech():Void{
+		if (onAlert && canSeePlayerCone()){
+			
 		}
 	}
 }

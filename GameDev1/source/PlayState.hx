@@ -29,7 +29,7 @@ class PlayState extends FlxState
 		//_map.loadEntities(placeEntities, "entities");
 		add(_mWalls);
 		
-		_player = new Player(300, 385, _mWalls);
+		_player = new Player(300, 385, _mWalls, this);
 		add(_player);
 		
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this);
