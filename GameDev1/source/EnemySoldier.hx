@@ -81,20 +81,20 @@ class EnemySoldier extends FlxSprite
 		pursueTurnCountdown = pursueTurnTime; 
 		backtrackAddCountdown = backtrackAddTime;
 		
-		loadGraphic("assets/images/soldier/sentry_sheet.png", true, 50, 57);//temp animations
+		loadGraphic("assets/images/soldier/sentry_sheet.png", true, 75, 75);//temp animations
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
 		setFacingFlip(FlxObject.UP, false, false);
 		setFacingFlip(FlxObject.DOWN, false, false);
-		animation.add("charge_back", [0,1,2,3,4,5], 10, true);
-		animation.add("charge_front", [6,7,8,9,10,11], 10, true);
-		animation.add("charge_side", [12,13,14,15,16,17], 10, true);
+		//animation.add("charge_back", [0,1,2,3,4,5], 10, true);
+		//animation.add("charge_front", [6,7,8,9,10,11], 10, true);
+		//animation.add("charge_side", [12,13,14,15,16,17], 10, true);
 		animation.add("idle_back", [18,19,20,21,22,23], 10, true);
 		animation.add("idle_front", [24,25,26,27,28,29], 10, true);
 		animation.add("idle_side", [30,31,32,33,34,35], 10, true);
-		//animation.add("lock_back", [0, 1, 0, 2], 10, true);
-		//animation.add("lock_front", [0, 1, 0, 2], 10, true);
-		//animation.add("lock_side", [0, 1, 0, 2], 10, true);
+		animation.add("lock_back", [0,1,2,3,4,5], 10, true);
+		animation.add("lock_front", [6,7,8,9,10,11], 10, true);
+		animation.add("lock_side", [12,13,14,15,16,17], 10, true);
 		
 		setPosition(_path[0].x, _path[0].y);
 		
@@ -247,7 +247,7 @@ class EnemySoldier extends FlxSprite
 		}
 		*/
 		
-		playAimAnimation();
+		playLockAnimation();
 	}
 	
 	//run to location player was last seen at. If there, wait, then leave alert
@@ -464,22 +464,22 @@ class EnemySoldier extends FlxSprite
 			animation.play("idle_back");
 		}
 		else if (facing == FlxObject.DOWN){
-			animation.play("idle_down");
+			animation.play("idle_front");
 		}
 		else{
 			animation.play("idle_side");
 		}
 	}
 	
-	function playAimAnimation():Void{
+	function playLockAnimation():Void{
 		if (facing == FlxObject.UP){
-			animation.play("aim_back");
+			animation.play("lock_back");
 		}
 		else if (facing == FlxObject.DOWN){
-			animation.play("aim_down");
+			animation.play("lock_front");
 		}
 		else{
-			animation.play("aim_side");
+			animation.play("lock_side");
 		}
 	}
 }
