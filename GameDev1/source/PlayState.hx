@@ -12,7 +12,7 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
-        _music = new BackgroundMusic(AssetPaths.walkTheme__wav, 5810, 34810);
+        _music = new BackgroundMusic(AssetPaths.walkTheme2__wav, 5810, 34810);
         _title = FlxG.sound.load(AssetPaths.titleTheme__wav, 1, false);
         _title.play();
 	}
