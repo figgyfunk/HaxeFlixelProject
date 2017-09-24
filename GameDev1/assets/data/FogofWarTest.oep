@@ -29,7 +29,7 @@
   </LevelValueDefinitions>
   <LayerDefinitions>
     <LayerDefinition xsi:type="TileLayerDefinition">
-      <Name>notouch</Name>
+      <Name>walls</Name>
       <Grid>
         <Width>16</Width>
         <Height>16</Height>
@@ -41,7 +41,7 @@
       <ExportMode>CSV</ExportMode>
     </LayerDefinition>
     <LayerDefinition xsi:type="TileLayerDefinition">
-      <Name>walls</Name>
+      <Name>notouch</Name>
       <Grid>
         <Width>16</Width>
         <Height>16</Height>

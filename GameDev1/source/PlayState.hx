@@ -15,6 +15,7 @@ class PlayState extends FlxState
 {
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
+	private var _decoration:FlxTilemap;
 	private var _fog:FlxTypedGroup<Fog>;
 
 
@@ -29,14 +30,15 @@ class PlayState extends FlxState
 	{
 		//copy this with correct file names to load levels
 		_fog = new FlxTypedGroup<Fog>();
-		_map = new FlxOgmoLoader(AssetPaths.fog_wall__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "walls");
+		_map = new FlxOgmoLoader(AssetPaths.blocked__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.place_holder_test_alpha__png, 16, 16, "walls");
 		_mWalls.setTileProperties(1, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
 		add(_mWalls);
-
+		_decoration = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "notouch");
+		add(_decoration);
 
 		_map.loadEntities(placeEntities, "warpPad");
 		add(_warpPad);
