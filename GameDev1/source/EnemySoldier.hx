@@ -81,10 +81,10 @@ class EnemySoldier extends FlxSprite
 		pursueTurnCountdown = pursueTurnTime; 
 		backtrackAddCountdown = backtrackAddTime;
 		
-		loadGraphic("assets/images/duck_small.png", true, 50, 57);//temp animations
+		loadGraphic("assets/images/soldier/sentry_sheet.png", true, 75, 75);//temp animations
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
-		animation.add("walk", [0, 1, 0, 2], 10, true);
+		animation.add("walk", [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52], 60, true);
 		animation.add("stand", [0], 2, true);
 		
 		setPosition(_path[0].x, _path[0].y);

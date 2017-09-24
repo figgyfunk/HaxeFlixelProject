@@ -39,6 +39,8 @@ class PlayState extends FlxState {
 		FlxG.camera.bgColor = 0xFF555555;
 		*/
 		
+		FlxG.camera.bgColor = 0xFF555555;
+		
 		//copy this with correct file names to load levels
 		_fog = new FlxTypedGroup<Fog>();
 		_map = new FlxOgmoLoader(AssetPaths.blocked__oel);
