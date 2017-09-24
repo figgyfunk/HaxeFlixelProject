@@ -8,6 +8,8 @@ import flixel.math.FlxPoint;
 import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.tile.FlxTilemap;
+import flixel.FlxState;
+import flixel.text.FlxText;
 
 class Player extends FlxSprite {
 	var _walls:FlxTilemap;
@@ -38,13 +40,16 @@ class Player extends FlxSprite {
 	var toggleinvis:Bool = false;
 	public var invisible:Bool = false;
 	var frozen:Bool = false;
+	
+	var rottext:FlxText;
+	var invistext:FlxText;
 
-	public function new(startX:Int, startY:Int, walls:FlxTilemap) {
+	public function new(startX:Int, startY:Int, walls:FlxTilemap, state:FlxState) {
 		super();
 		
 		_walls = walls;
 		
-		loadGraphic("assets/images/duck.png", true, spritewidth, spriteheight);
+		loadGraphic("assets/images/duck_small.png", true, spritewidth, spriteheight);
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
 		animation.add("walk", [0, 1, 0, 2], 10, true);
@@ -53,6 +58,11 @@ class Player extends FlxSprite {
 		setPosition(startX, startY);
 		
 		playermap = new PlayerMap(Std.int(1024 / tilesize), Std.int(768 / tilesize));
+		
+		rottext = new FlxText(10, 90, 300, "");
+		state.add(rottext);
+		invistext = new FlxText(10, 110, 300, "");
+		state.add(invistext);
 	}
 	
 	override public function update(elapsed:Float):Void {
@@ -61,6 +71,9 @@ class Player extends FlxSprite {
 		movement();
 		detect();
 		invisibility(elapsed);
+		
+		rottext.text = "player rot: " + Std.string(_rot);
+		invistext.text = "invis: " + Std.string(invisible) + " " + Std.string(duration) + " " + Std.string(cooldown);
 	}
 	
 	function invisibility(elapsed:Float):Void {
@@ -120,6 +133,12 @@ class Player extends FlxSprite {
 			}
 			else if (_rot > 90 || _rot < -90) {
 				facing = FlxObject.LEFT;
+			}
+			else if (_rot == -90) {
+				facing = FlxObject.UP;
+			}
+			else if (_rot == 90) {
+				facing = FlxObject.DOWN;
 			}
 			
 			//move it!
