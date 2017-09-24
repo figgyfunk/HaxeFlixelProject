@@ -29,9 +29,9 @@ class PlayState extends FlxState
 	{
 		//copy this with correct file names to load levels
 		_fog = new FlxTypedGroup<Fog>();
-		_map = new FlxOgmoLoader(AssetPaths.fog_1__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
-		_mWalls.setTileProperties(2, FlxObject.ANY);
+		_map = new FlxOgmoLoader(AssetPaths.fog_wall__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "walls");
+		_mWalls.setTileProperties(1, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
@@ -46,12 +46,12 @@ class PlayState extends FlxState
 		_player = new Player(20, 20, _mWalls);
 		add(_player);
 
-		_map.loadEntities(placeEntities, "fog");
-		add(_fog);
+
 
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPath(), this);
 		add(_soldier01);
-
+		_map.loadEntities(placeEntities, "fog");
+		add(_fog);
 
 		super.create();
 	}
@@ -64,11 +64,8 @@ class PlayState extends FlxState
 					//_fog.remove(fog);
 					if(fog.exists){
 
-						_fog.remove(fog,true);
 						fog.kill();
-						var text = new flixel.text.FlxText(0, 0, 0, Std.string(fog.exists), 64);
-						text.screenCenter();
-						add(text);
+
 					}
 				}
 		}
@@ -100,15 +97,16 @@ class PlayState extends FlxState
 		var y:Int = Std.parseInt(entityData.get("y"));
 		if (entityName == "fog")
 		{
-				var fog:Fog = new Fog(x+4, y+4,_player,_mWalls);
-
+				var fog:Fog = new Fog(x, y,_player,_mWalls);
 				_fog.add(fog);
+
 
 		}
 		if(entityName == "warpPad"){
 			_warpPad = new WarpPad(x+4, y+4);
 		}
 }
+
 
 
 

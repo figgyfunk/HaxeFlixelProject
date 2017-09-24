@@ -18,14 +18,25 @@ class Fog extends FlxSprite
 {
     private var _player:FlxSprite;
     private var _walls:FlxTilemap;
+    private var _wallFog:Bool;
 
     public function new(?X:Float=0, ?Y:Float=0, player:FlxSprite, walls:FlxTilemap)
     {
         super(X, Y);
-        makeGraphic(64,64, FlxColor.RED);
-
+        makeGraphic(20,20, FlxColor.RED);
+        updateHitbox();
         _player = player;
         _walls = walls;
+        _wallFog = false;
+        var tiles:Array<FlxPoint> = _walls.getTileCoords(1);
+        for( tile in tiles ) {
+          if( getMidpoint().x+2 >=  tile.x && getMidpoint().x-2 <= tile.x) {
+              if( getMidpoint().y+2 >= tile.y && getMidpoint().y -2 <=tile.y ) {
+                _wallFog = true;
+              }
+          }
+        }
+
 
     }
 
@@ -34,21 +45,27 @@ class Fog extends FlxSprite
       super.update(elapsed);
   	}
 
-    override public function kill():Void {
-      super.kill();
-  	}
+
+
 
     public function checkFog() : Bool {
         var blocked:Bool = _walls.ray(getMidpoint(), _player.getMidpoint());
         if(blocked){
-          var distance =getMidpoint().distanceTo( _player.getMidpoint());
+          var distance = getMidpoint().distanceTo( _player.getMidpoint());
+          if(distance < 100){
+            return true;
+          }
+        }
+
+        if( _wallFog) {
+          var distance = getMidpoint().distanceTo( _player.getMidpoint());
           if(distance < 100){
             return true;
 
           }
-          return false;
-
         }
+
+
         return false;
     }
   }
