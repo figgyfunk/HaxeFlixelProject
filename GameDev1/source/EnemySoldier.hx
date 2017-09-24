@@ -81,11 +81,20 @@ class EnemySoldier extends FlxSprite
 		pursueTurnCountdown = pursueTurnTime; 
 		backtrackAddCountdown = backtrackAddTime;
 		
-		loadGraphic("assets/images/duck_small.png", true, 50, 57);//temp animations
+		loadGraphic("assets/images/soldier/sentry_sheet.png", true, 50, 57);//temp animations
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
-		animation.add("walk", [0, 1, 0, 2], 10, true);
-		animation.add("stand", [0], 2, true);
+		setFacingFlip(FlxObject.UP, false, false);
+		setFacingFlip(FlxObject.DOWN, false, false);
+		animation.add("charge_back", [0,1,2,3,4,5], 10, true);
+		animation.add("charge_front", [6,7,8,9,10,11], 10, true);
+		animation.add("charge_side", [12,13,14,15,16,17], 10, true);
+		animation.add("idle_back", [18,19,20,21,22,23], 10, true);
+		animation.add("idle_front", [24,25,26,27,28,29], 10, true);
+		animation.add("idle_side", [30,31,32,33,34,35], 10, true);
+		//animation.add("lock_back", [0, 1, 0, 2], 10, true);
+		//animation.add("lock_front", [0, 1, 0, 2], 10, true);
+		//animation.add("lock_side", [0, 1, 0, 2], 10, true);
 		
 		setPosition(_path[0].x, _path[0].y);
 		
@@ -181,8 +190,6 @@ class EnemySoldier extends FlxSprite
 					_moveTowardIndex = 0;
 				}
 			}
-			
-			animation.stop();
 		}
 		//not on a node specifed by path
 		else{
@@ -191,10 +198,9 @@ class EnemySoldier extends FlxSprite
 			turnToward(_path[_moveTowardIndex]);
 			velocity.set(walkSpeed);
 			velocity.rotate(new FlxPoint(0, 0), _velRot);
-			
-			animation.play("walk");
 		}
 		
+		playIdleAnimation();
 	}
 	
 	//walk along path stored in backtrack array
@@ -219,7 +225,7 @@ class EnemySoldier extends FlxSprite
 			velocity.rotate(new FlxPoint(0, 0), _velRot);
 		}
 		
-		animation.play("walk");
+		playIdleAnimation();
 	}
 	
 	//stand still and aim at player to kill it
@@ -241,7 +247,7 @@ class EnemySoldier extends FlxSprite
 		}
 		*/
 		
-		animation.stop();
+		playAimAnimation();
 	}
 	
 	//run to location player was last seen at. If there, wait, then leave alert
@@ -275,8 +281,6 @@ class EnemySoldier extends FlxSprite
 				
 				onAlert = false;
 			}
-			
-			animation.stop();
 		}
 		//not at last known player location
 		else{
@@ -287,16 +291,20 @@ class EnemySoldier extends FlxSprite
 			turnToward(_lastKnownPlayerPosition);
 			velocity.set(runSpeed);
 			velocity.rotate(new FlxPoint(0, 0), _velRot);
-			
-			animation.play("walk");
 		}
+		
+		playIdleAnimation();
 	}
 	
 	//returns true if the soldier can see the player from any direction
 	function canSeePlayer360():Bool{
 		
-		//to add: if the player is invisible. return false
-		
+		//if the player is invisible. return false
+		/*
+		if (_player.isInvisible()){
+			return false;
+		}
+		*/
 		
 		//if a ray cannot travel from soldier to player's midpoint without hitting anything,
 		//return false
@@ -449,5 +457,29 @@ class EnemySoldier extends FlxSprite
 		var xVariance:Float = Math.abs(point.x - this.x);
 		var yVariance:Float = Math.abs(point.y - this.y);
 		return (xVariance > yVariance) && (point.x > this.x);
+	}
+	
+	function playIdleAnimation():Void{
+		if (facing == FlxObject.UP){
+			animation.play("idle_back");
+		}
+		else if (facing == FlxObject.DOWN){
+			animation.play("idle_down");
+		}
+		else{
+			animation.play("idle_side");
+		}
+	}
+	
+	function playAimAnimation():Void{
+		if (facing == FlxObject.UP){
+			animation.play("aim_back");
+		}
+		else if (facing == FlxObject.DOWN){
+			animation.play("aim_down");
+		}
+		else{
+			animation.play("aim_side");
+		}
 	}
 }

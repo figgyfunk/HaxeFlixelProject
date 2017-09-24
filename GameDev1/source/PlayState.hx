@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxState;
 import flixel.FlxObject;
+import flixel.FlxG;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.tile.FlxTilemap;
 import flixel.group.FlxGroup;
@@ -33,6 +34,8 @@ class PlayState extends FlxState
 		
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this);
 		add(_soldier01);
+		
+		FlxG.camera.bgColor = 0xFF555555;
 
 		super.create();
 	}
