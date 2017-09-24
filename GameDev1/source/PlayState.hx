@@ -14,8 +14,6 @@ import flixel.math.FlxPoint;
 using flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState {
-	var player:Player;
-	
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
 	private var _decoration:FlxTilemap;
@@ -43,26 +41,26 @@ class PlayState extends FlxState {
 		
 		//copy this with correct file names to load levels
 		_fog = new FlxTypedGroup<Fog>();
-		_map = new FlxOgmoLoader(AssetPaths.blocked__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.place_holder_test_alpha__png, 16, 16, "walls");
-		_mWalls.setTileProperties(1, FlxObject.ANY);
+		_map = new FlxOgmoLoader(AssetPaths.RectangleHallway__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "Walls");
+		_mWalls.setTileProperties(2, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
 		add(_mWalls);
-		_decoration = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "notouch");
+		//_decoration = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "notouch");
 		add(_decoration);
 		
-		_map.loadEntities(placeEntities, "warpPad");
-		add(_warpPad);
+		//_map.loadEntities(placeEntities, "warpPad");
+		//add(_warpPad);
 		
 		_player = new Player(50, 50, _mWalls, this);
 		add(_player);
 		
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPath(), this);
 		add(_soldier01);
-		_map.loadEntities(placeEntities, "fog");
-		add(_fog);
+		//_map.loadEntities(placeEntities, "fog");
+		//add(_fog);
 		
 		/*
 		//Player camera centers on the player
@@ -71,6 +69,8 @@ class PlayState extends FlxState {
 		playercam.follow(player, FlxCameraFollowStyle.TOPDOWN);
 		FlxG.cameras.add(playercam);
 		*/
+		
+		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN);
 		
 		super.create();
 	}

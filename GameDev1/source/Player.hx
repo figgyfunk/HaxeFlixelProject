@@ -13,7 +13,7 @@ import flixel.text.FlxText;
 
 class Player extends FlxSprite {
 	var _walls:FlxTilemap;
-	public var playermap:PlayerMap;
+	//public var playermap:PlayerMap;
 	
 	public var _rot:Float = 0;
 	var _up:Bool = false;
@@ -60,7 +60,7 @@ class Player extends FlxSprite {
 		animation.add("stand", [0,1,2,3,4,5], 5, true);
 		
 		//not used anymore
-		playermap = new PlayerMap(Std.int(1024 / tilesize), Std.int(768 / tilesize));
+		//playermap = new PlayerMap(Std.int(1024 / tilesize), Std.int(768 / tilesize));
 		
 		//debugging text
 		rottext = new FlxText(10, 90, 300, "");
@@ -73,7 +73,7 @@ class Player extends FlxSprite {
 		super.update(elapsed);
 		poll();
 		movement();
-		detect();
+		//detect();
 		invisibility(elapsed);
 		
 		//If killed, reset level after a set duration
@@ -118,7 +118,7 @@ class Player extends FlxSprite {
 		_right = FlxG.keys.anyPressed([RIGHT, D]);
 		toggleinvis = FlxG.keys.justPressed.SPACE;
 		
-		if (FlxG.keys.justPressed.D) {
+		if (FlxG.keys.justPressed.F) {
 			die();
 		}
 	}
@@ -146,8 +146,10 @@ class Player extends FlxSprite {
 			//check if there is something ahead of direction
 			//pathblocked = overlapsAt(x + (xspeed / 60), y + (yspeed / 60), _walls);
 			
+			var destpoint = new FlxPoint(x + xspeed + (spritewidth / 2), y + yspeed + (spriteheight / 2));
+			
 			//calculate rotation angle
-			_rot = FlxAngle.angleBetweenPoint(this, new FlxPoint(x + xspeed + (spritewidth / 2), y + yspeed + (spriteheight / 2)), true);
+			_rot = FlxAngle.angleBetweenPoint(this, destpoint, true);
 			
 			//flip sprite when moving left/right
 			if (_rot < 90 && _rot > -90) {
@@ -164,7 +166,7 @@ class Player extends FlxSprite {
 			}
 			
 			//move it!
-			velocity.set(speed, 0);
+			velocity.set(FlxMath.distanceToPoint(this, destpoint), 0);
 			velocity.rotate(new FlxPoint(0, 0), _rot);
 			FlxG.collide(this, _walls);
 			animation.play("walk");
@@ -175,6 +177,7 @@ class Player extends FlxSprite {
 		}
 	}
 	
+	/*
 	//Checks for objects in the player's circle of view
 	function detect():Void {
 		for (i in Std.int((x - visionradius) / tilesize)...Std.int((x + visionradius) / tilesize)) {
@@ -186,6 +189,7 @@ class Player extends FlxSprite {
 			}
 		}
 	}
+	*/
 	
 	function toggleInvisible():Void {
 		//If currently invisible, turn it off and set cooldown
@@ -193,13 +197,13 @@ class Player extends FlxSprite {
 			invisible = false;
 			cooldown = inviscooldown;
 			duration = 0;
-			this.visible = true;
+			this.alpha = 1;
 		}
 		//If not currently invisible and cooldown is off, then turn it on
 		if (!invisible && cooldown == 0) {
 			invisible = true;
 			duration = 0;
-			this.visible = false;
+			this.alpha = 0.5;
 		}
 	}
 	
