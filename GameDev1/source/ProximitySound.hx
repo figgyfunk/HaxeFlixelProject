@@ -1,6 +1,6 @@
 package;
 
-import flixel;
+import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.system.FlxSound;
 
