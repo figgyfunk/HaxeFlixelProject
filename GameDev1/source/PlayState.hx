@@ -15,7 +15,8 @@ class PlayState extends FlxState
 {
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
-	private var _fogGroup:FlxTypedGroup<Fog>;
+	private var _fog:FlxTypedGroup<Fog>;
+
 
 	private var _proceed:Bool = false;
 
@@ -27,17 +28,16 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		//copy this with correct file names to load levels
-
-		_map = new FlxOgmoLoader(AssetPaths.fog_2__oel);
+		_fog = new FlxTypedGroup<Fog>();
+		_map = new FlxOgmoLoader(AssetPaths.fog_1__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
 		add(_mWalls);
-		_fogGroup = new FlxTypedGroup<Fog>();
-		add(_fogGroup);
-		_map.loadEntities(placeEntities, "fog");
+
+
 		_map.loadEntities(placeEntities, "warpPad");
 		add(_warpPad);
 
@@ -45,6 +45,9 @@ class PlayState extends FlxState
 
 		_player = new Player(20, 20, _mWalls);
 		add(_player);
+
+		_map.loadEntities(placeEntities, "fog");
+		add(_fog);
 
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPath(), this);
 		add(_soldier01);
@@ -55,7 +58,26 @@ class PlayState extends FlxState
 
 	override public function update(elapsed:Float):Void
 	{
-		FlxG.overlap(_player, _fogGroup, playerTouchFog);
+
+		for( fog in _fog.members ) {
+				if(fog.checkFog()){
+					//_fog.remove(fog);
+					if(fog.exists){
+
+						_fog.remove(fog,true);
+						fog.kill();
+						var text = new flixel.text.FlxText(0, 0, 0, Std.string(fog.exists), 64);
+						text.screenCenter();
+						add(text);
+					}
+				}
+		}
+
+		if( _fog.countLiving() == 0 ) {
+
+				_proceed = true;
+		}
+
 		FlxG.overlap(_player, _warpPad, changeStage);
 		super.update(elapsed);
 
@@ -78,29 +100,24 @@ class PlayState extends FlxState
 		var y:Int = Std.parseInt(entityData.get("y"));
 		if (entityName == "fog")
 		{
-				_fogGroup.add(new Fog(x+4, y+4));
+				var fog:Fog = new Fog(x+4, y+4,_player,_mWalls);
+
+				_fog.add(fog);
+
 		}
 		if(entityName == "warpPad"){
 			_warpPad = new WarpPad(x+4, y+4);
 		}
 }
 
-private function playerTouchFog(P:Player, F:Fog):Void
-{
-    if (P.alive && P.exists && F.alive && F.exists)
-    {
-        F.kill();
-				if( _fogGroup.countLiving() == 0 ) {
-					_proceed = true;
 
-				}
-
-    }
-}
 
 private function changeStage(P:Player, W:WarpPad) : Void {
 		if(_proceed){
-			FlxG.switchState(new Play2State());
+			//FlxG.switchState(new Play2State());
+			var text = new flixel.text.FlxText(0, 0, 0, "yay", 64);
+			text.screenCenter();
+			add(text);
 		}
 
 }
