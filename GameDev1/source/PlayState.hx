@@ -28,30 +28,32 @@ class PlayState extends FlxState
 
 	override public function create():Void
 	{
+		//FlxG.camera.setSize(1000,1000);
+		FlxG.worldBounds.set(1000,1000);
 		//copy this with correct file names to load levels
 		_fog = new FlxTypedGroup<Fog>();
-		_map = new FlxOgmoLoader(AssetPaths.blocked__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.place_holder_test_alpha__png, 16, 16, "walls");
-		_mWalls.setTileProperties(1, FlxObject.ANY);
+		_map = new FlxOgmoLoader(AssetPaths.bigger_fog__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.place_holder_test__png, 64, 64, "walls");
+		_mWalls.setTileProperties(2, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
 		add(_mWalls);
-		_decoration = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "notouch");
+		_decoration = _map.loadTilemap(AssetPaths.level_1_fixed__png, 3200, 3200, "notouch");
 		add(_decoration);
 
-		_map.loadEntities(placeEntities, "warpPad");
-		add(_warpPad);
+		//_map.loadEntities(placeEntities, "warpPad");
+		//add(_warpPad);
 
 
 
-		_player = new Player(20, 20, _mWalls);
+		_player = new Player(500, 200, _mWalls);
 		add(_player);
 
+		FlxG.camera.follow(_player);
 
-
-		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPath(), this);
-		add(_soldier01);
+		/*_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPath(), this);
+		add(_soldier01);*/
 		_map.loadEntities(placeEntities, "fog");
 		add(_fog);
 
@@ -78,6 +80,7 @@ class PlayState extends FlxState
 		}
 
 		FlxG.overlap(_player, _warpPad, changeStage);
+
 		super.update(elapsed);
 
 	}

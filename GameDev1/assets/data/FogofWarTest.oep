@@ -31,8 +31,8 @@
     <LayerDefinition xsi:type="TileLayerDefinition">
       <Name>walls</Name>
       <Grid>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>64</Width>
+        <Height>64</Height>
       </Grid>
       <ScrollFactor>
         <X>1</X>
@@ -43,25 +43,14 @@
     <LayerDefinition xsi:type="TileLayerDefinition">
       <Name>notouch</Name>
       <Grid>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>3200</Width>
+        <Height>3200</Height>
       </Grid>
       <ScrollFactor>
         <X>1</X>
         <Y>1</Y>
       </ScrollFactor>
       <ExportMode>CSV</ExportMode>
-    </LayerDefinition>
-    <LayerDefinition xsi:type="EntityLayerDefinition">
-      <Name>fog</Name>
-      <Grid>
-        <Width>16</Width>
-        <Height>16</Height>
-      </Grid>
-      <ScrollFactor>
-        <X>1</X>
-        <Y>1</Y>
-      </ScrollFactor>
     </LayerDefinition>
     <LayerDefinition xsi:type="EntityLayerDefinition">
       <Name>warpPad</Name>
@@ -74,23 +63,56 @@
         <Y>1</Y>
       </ScrollFactor>
     </LayerDefinition>
+    <LayerDefinition xsi:type="EntityLayerDefinition">
+      <Name>player</Name>
+      <Grid>
+        <Width>50</Width>
+        <Height>50</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="EntityLayerDefinition">
+      <Name>enemy</Name>
+      <Grid>
+        <Width>75</Width>
+        <Height>75</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="EntityLayerDefinition">
+      <Name>fog</Name>
+      <Grid>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+    </LayerDefinition>
   </LayerDefinitions>
   <Tilesets>
     <Tileset>
       <Name>tiles</Name>
-      <FilePath>..\images\place_holder_test_alpha.png</FilePath>
+      <FilePath>..\images\place_holder_test.png</FilePath>
       <TileSize>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>64</Width>
+        <Height>64</Height>
       </TileSize>
       <TileSep>0</TileSep>
     </Tileset>
     <Tileset>
       <Name>notouch</Name>
-      <FilePath>..\images\place_holder.png</FilePath>
+      <FilePath>..\images\level_1_fixed.png</FilePath>
       <TileSize>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>3200</Width>
+        <Height>3200</Height>
       </TileSize>
       <TileSep>0</TileSep>
     </Tileset>
@@ -98,8 +120,8 @@
   <EntityDefinitions>
     <EntityDefinition Name="fog" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
       <Size>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>64</Width>
+        <Height>64</Height>
       </Size>
       <Origin>
         <X>0</X>
@@ -122,6 +144,36 @@
       </Origin>
       <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
         <RectColor A="255" R="0" G="128" B="255" />
+      </ImageDefinition>
+      <ValueDefinitions />
+      <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
+    </EntityDefinition>
+    <EntityDefinition Name="player" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
+      <Size>
+        <Width>50</Width>
+        <Height>50</Height>
+      </Size>
+      <Origin>
+        <X>0</X>
+        <Y>0</Y>
+      </Origin>
+      <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
+        <RectColor A="255" R="0" G="255" B="64" />
+      </ImageDefinition>
+      <ValueDefinitions />
+      <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
+    </EntityDefinition>
+    <EntityDefinition Name="enemy" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
+      <Size>
+        <Width>75</Width>
+        <Height>75</Height>
+      </Size>
+      <Origin>
+        <X>0</X>
+        <Y>0</Y>
+      </Origin>
+      <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
+        <RectColor A="255" R="255" G="128" B="255" />
       </ImageDefinition>
       <ValueDefinitions />
       <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />

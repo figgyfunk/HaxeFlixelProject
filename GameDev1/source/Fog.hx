@@ -23,12 +23,12 @@ class Fog extends FlxSprite
     public function new(?X:Float=0, ?Y:Float=0, player:FlxSprite, walls:FlxTilemap)
     {
         super(X, Y);
-        makeGraphic(20,20, FlxColor.RED);
+        makeGraphic(64,64, FlxColor.GRAY);
         updateHitbox();
         _player = player;
         _walls = walls;
         _wallFog = false;
-        var tiles:Array<FlxPoint> = _walls.getTileCoords(1);
+        var tiles:Array<FlxPoint> = _walls.getTileCoords(2);
         for( tile in tiles ) {
           if( getMidpoint().x+2 >=  tile.x && getMidpoint().x-2 <= tile.x) {
               if( getMidpoint().y+2 >= tile.y && getMidpoint().y -2 <=tile.y ) {
