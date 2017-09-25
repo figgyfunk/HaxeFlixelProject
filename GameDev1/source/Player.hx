@@ -45,6 +45,8 @@ class Player extends FlxSprite {
 	
 	var rottext:FlxText;
 	var invistext:FlxText;
+	
+	var State:FlxState;
 
 	public function new(startX:Int, startY:Int, walls:FlxTilemap, state:FlxState) {
 		super();
@@ -67,6 +69,8 @@ class Player extends FlxSprite {
 		state.add(rottext);
 		invistext = new FlxText(10, 110, 300, "");
 		state.add(invistext);
+		
+		State = state;
 	}
 	
 	override public function update(elapsed:Float):Void {
@@ -120,6 +124,11 @@ class Player extends FlxSprite {
 		
 		if (FlxG.keys.justPressed.F) {
 			die();
+		}
+		
+		if (FlxG.keys.justPressed.T) {
+			var sb:SpeechBubble = new SpeechBubble(this, 0, -20, 3000, "Hello World!");
+			State.add(sb);
 		}
 	}
 	
