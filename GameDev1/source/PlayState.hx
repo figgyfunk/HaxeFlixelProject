@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxState;
+import flixel.system.FlxSound;
 import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
@@ -16,6 +17,11 @@ class PlayState extends FlxState
 	
 	private var _player:Player;
 	private var _soldier01:EnemySoldier;
+	private var _soldiers:Array<EnemySoldier>;
+	
+	private var _backMusic:BackgroundMusic;
+	private var _alertMusic:BackgroundMusic;
+	private var _lastFrameAlert:Bool = false;
 	
 	override public function create():Void
 	{
@@ -32,17 +38,43 @@ class PlayState extends FlxState
 		_player = new Player(300, 385, _mWalls, this);
 		add(_player);
 		
-		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this);
+		_soldiers = new Array<EnemySoldier>();
+		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
+		_soldiers.push(_soldier01);
 		add(_soldier01);
 		
 		FlxG.camera.bgColor = 0xFF555555;
-
+		
+		_backMusic = new BackgroundMusic(AssetPaths.WalkTheme__wav, 5810, 34810);
+		_alertMusic = new BackgroundMusic(AssetPaths.DetectTheme__wav, 90001);
+		
+		_backMusic.play();
+		
 		super.create();
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		
+		//manage detected music
+		var oneAlerted:Bool = false;
+		for(s in _soldiers){
+			if (s.isOnAlert()){
+				oneAlerted = true;
+				break;
+			}
+		}
+		if (oneAlerted && !_lastFrameAlert){
+			_backMusic.pause();
+			_alertMusic.play();
+			_lastFrameAlert = true;
+		}
+		else if ( !oneAlerted && _lastFrameAlert ){
+			_alertMusic.stop();
+			_backMusic.unpauseAndReset();
+			_lastFrameAlert = false;
+		}
 	}
 
 	private function placeEntities(entityName:String, entityData:Xml):Void

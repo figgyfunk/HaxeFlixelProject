@@ -54,11 +54,14 @@ class EnemySoldier extends FlxSprite
 	var _faceRot:Float = 0;
 	var _velRot:Float = 0;
 	
+	var _state:FlxState;
+	
 	var actionText:FlxText = new FlxText(10, 10, 300, "Debug Text");//debug
 	var facingText:FlxText = new FlxText(10, 30, 300, "Facing Text");//debug
 	var faceRotText:FlxText = new FlxText(10, 50, 300, "Facing Rotation Text");//debug
 	var velRotText:FlxText = new FlxText(10, 70, 300, "Velocity Rotation Text");//debug
-	var _state:FlxState;
+	
+	var _proxSound:ProximitySound;
 
 	/*
 	 * arguments:
@@ -68,7 +71,7 @@ class EnemySoldier extends FlxSprite
 	 * 				The soldier will travel from the first point to the second and so on. When it reaches the
 	 * 				end of the array, it will travel back to the first point.
 	 * */
-	public function new(player:Player, map:FlxTilemap, path:Array<FlxPoint>, state:FlxState) 
+	public function new(player:Player, map:FlxTilemap, path:Array<FlxPoint>, state:FlxState, ps:ProximitySound) 
 	{
 		super();
 		_player = player;
@@ -100,6 +103,9 @@ class EnemySoldier extends FlxSprite
 		animation.add("lock_side", [12,13,14,15,16,17], 10, true);
 		
 		setPosition(_path[0].x, _path[0].y);
+		_proxSound = ps;
+		_proxSound.update(_path[0].x, _path[0].y);
+		_proxSound.play();
 		
 		drag.x = drag.y = 2000;
 		
@@ -113,12 +119,13 @@ class EnemySoldier extends FlxSprite
 	override public function update(elapsed:Float):Void{
 		super.update(elapsed);
 		movement();
+		_proxSound.update(this.getMidpoint().x, this.getMidpoint().y);
 	}
 	
 	function movement():Void{
 		
-		//if player touches enemy, player dies
-		if ( FlxG.overlap(this, _player) ){
+		//if player touches enemy while visible, player dies
+		if ( !_player.isInvisible() && FlxG.overlap(this, _player) ){
 			_player.die();
 		}
 		
@@ -199,6 +206,8 @@ class EnemySoldier extends FlxSprite
 					_moveTowardIndex = 0;
 				}
 			}
+			
+			_proxSound.pause();
 		}
 		//not on a node specifed by path
 		else{
@@ -207,6 +216,8 @@ class EnemySoldier extends FlxSprite
 			turnToward(_path[_moveTowardIndex]);
 			velocity.set(walkSpeed);
 			velocity.rotate(new FlxPoint(0, 0), _velRot);
+			
+			_proxSound.resume();
 		}
 		
 		playIdleAnimation();
@@ -235,6 +246,8 @@ class EnemySoldier extends FlxSprite
 		}
 		
 		playIdleAnimation();
+		
+		_proxSound.resume();
 	}
 	
 	//stand still and aim at player to kill it
@@ -257,6 +270,8 @@ class EnemySoldier extends FlxSprite
 		}
 		
 		playLockAnimation();
+		
+		_proxSound.pause();
 	}
 	
 	//run to location player was last seen at. If there, wait, then leave alert
@@ -290,6 +305,8 @@ class EnemySoldier extends FlxSprite
 				
 				onAlert = false;
 			}
+			
+			_proxSound.pause();
 		}
 		//not at last known player location
 		else{
@@ -300,6 +317,8 @@ class EnemySoldier extends FlxSprite
 			turnToward(_lastKnownPlayerPosition);
 			velocity.set(runSpeed);
 			velocity.rotate(new FlxPoint(0, 0), _velRot);
+			
+			_proxSound.resume();
 		}
 		
 		playIdleAnimation();
@@ -511,5 +530,9 @@ class EnemySoldier extends FlxSprite
 		if (onAlert && canSeePlayerCone()){
 			
 		}
+	}
+	
+	public function isOnAlert():Bool{
+		return onAlert;
 	}
 }
