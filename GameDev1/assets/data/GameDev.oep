@@ -29,10 +29,22 @@
   </LevelValueDefinitions>
   <LayerDefinitions>
     <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>floor</Name>
+      <Grid>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
       <Name>wall</Name>
       <Grid>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>170</Width>
+        <Height>128</Height>
       </Grid>
       <ScrollFactor>
         <X>1</X>
@@ -51,14 +63,55 @@
         <Y>1</Y>
       </ScrollFactor>
     </LayerDefinition>
+    <LayerDefinition xsi:type="EntityLayerDefinition">
+      <Name>player_enemies</Name>
+      <Grid>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>hiding</Name>
+      <Grid>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
   </LayerDefinitions>
   <Tilesets>
     <Tileset>
       <Name>wall</Name>
-      <FilePath>..\images\place_holder.png</FilePath>
+      <FilePath>..\images\allwalls.png</FilePath>
       <TileSize>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>170</Width>
+        <Height>128</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+    <Tileset>
+      <Name>hiding</Name>
+      <FilePath>..\images\floor_extra.png</FilePath>
+      <TileSize>
+        <Width>64</Width>
+        <Height>64</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+    <Tileset>
+      <Name>floor</Name>
+      <FilePath>..\images\floor.png</FilePath>
+      <TileSize>
+        <Width>64</Width>
+        <Height>64</Height>
       </TileSize>
       <TileSep>0</TileSep>
     </Tileset>
