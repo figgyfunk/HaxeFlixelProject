@@ -87,7 +87,7 @@ class EnemySoldier extends FlxSprite
 		pursueTurnCountdown = pursueTurnTime; 
 		backtrackAddCountdown = backtrackAddTime;
 		
-		loadGraphic("assets/images/soldier/sentry_sheet.png", true, spriteWidth, spriteHeight);//temp animations
+		loadGraphic("assets/images/SENTRY.png", true, spriteWidth, spriteHeight);//temp animations
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
 		setFacingFlip(FlxObject.UP, false, false);
