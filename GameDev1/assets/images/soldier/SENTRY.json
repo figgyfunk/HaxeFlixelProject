@@ -480,10 +480,10 @@
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "sentry_sheet.png",
+	"image": "SENTRY.png",
 	"format": "RGBA8888",
 	"size": {"w":2025,"h":150},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:ae3c4756c849ff829c3703a32cc43015:4795fc08d09ea54f06d0714b54c492a7:4a3d52af4a84907e290e40e9eb08ed50$"
+	"smartupdate": "$TexturePacker:SmartUpdate:7e281ab9e7f1ef931f50baf2db753cce:34a3378be63bce331bfe7630b8ddbbac:e02c019462aedd89d138a0961372f628$"
 }
 }
