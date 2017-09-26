@@ -16,9 +16,15 @@
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1</walls>
   <notouch tileset="notouch" exportMode="CSV">1</notouch>
-  <warpPad />
-  <player />
-  <enemy />
+  <warpPad>
+    <warpPad id="0" x="1440" y="368" />
+  </warpPad>
+  <player>
+    <player id="0" x="50" y="350" />
+  </player>
+  <enemy>
+    <enemy id="0" x="750" y="225" />
+  </enemy>
   <fog>
     <fog id="0" x="0" y="512" />
     <fog id="1" x="0" y="448" />

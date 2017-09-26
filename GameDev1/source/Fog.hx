@@ -52,14 +52,14 @@ class Fog extends FlxSprite
         var blocked:Bool = _walls.ray(getMidpoint(), _player.getMidpoint());
         if(blocked){
           var distance = getMidpoint().distanceTo( _player.getMidpoint());
-          if(distance < 100){
+          if(distance < 250){
             return true;
           }
         }
 
         if( _wallFog) {
           var distance = getMidpoint().distanceTo( _player.getMidpoint());
-          if(distance < 100){
+          if(distance < 250){
             return true;
 
           }
