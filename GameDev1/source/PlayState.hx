@@ -54,12 +54,14 @@ class PlayState extends FlxState
 		_decoration = _map.loadTilemap(AssetPaths.level_1_fixed__png, 3200, 3200, "notouch");
 		add(_decoration);
 
+		_map.loadEntities(placeEntities, "warpPad");
+		add(_warpPad);
+		
 		_map.loadEntities(placeEntities, "player");
 		add(_player);
 		FlxG.camera.follow(_player);
 
-		_map.loadEntities(placeEntities, "warpPad");
-		add(_warpPad);
+
 
 		_map.loadEntities(placeEntities, "fog");
 		add(_fog);
@@ -152,7 +154,7 @@ class PlayState extends FlxState
 			_fog.add(fog);
 		}
 		if(entityName == "warpPad"){
-			_warpPad = new WarpPad(x, y);
+			_warpPad = new WarpPad(x-32, y-32);
 		}
 
 		if(entityName == "player"){
