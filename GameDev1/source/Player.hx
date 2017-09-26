@@ -26,8 +26,10 @@ class Player extends FlxSprite {
 	var yspeed:Float = 0;
 	var pathblocked:Bool = false;
 
-	var spritewidth:Int = 50;
-	var spriteheight:Int = 50;
+	var spritewidth:Int = 100;
+	var spriteheight:Int = 100;
+	var graphicHeight:Int = 100;
+	var graphicWidth:Int = 100;
 
 	var visionradius:Int = 200;
 	var tilesize:Int = 16;
@@ -54,10 +56,15 @@ class Player extends FlxSprite {
 		
 		//animations
 		loadGraphic("assets/images/delta.png", true, spritewidth, spriteheight);
+		setGraphicSize(graphicWidth, graphicHeight);
+		updateHitbox();
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
-		animation.add("walk", [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 20, true);
-		animation.add("stand", [0,1,2,3,4,5], 5, true);
+		animation.add("die", [0, 1, 2, 3, 4, 5, 6, 7], 8, false);
+		animation.add("idle", [8, 9, 10, 11, 12, 13], 10, true);
+		animation.add("reappear", [14, 15, 16, 17, 18], 8, false);
+		animation.add("run", [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], 20, true);
+		animation.add("vanish", [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44], 10, false);
 		
 		playermap = new PlayerMap(Std.int(1024 / tilesize), Std.int(768 / tilesize));
 		
@@ -71,10 +78,9 @@ class Player extends FlxSprite {
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 		poll();
-		movement();
-		//detect();
 		invisibility(elapsed);
-		
+		movement();
+			
 		//If killed, reset level after a set duration
 		if (frozen) {
 			frozenelapsed = frozenelapsed + Std.int(elapsed * 1000);
@@ -93,6 +99,7 @@ class Player extends FlxSprite {
 	public function die():Void {
 		frozen = true;
 		//play dying animation
+		animation.play("die");
 	}
 	
 	function invisibility(elapsed:Float):Void {
@@ -168,11 +175,17 @@ class Player extends FlxSprite {
 			velocity.set(speed, 0);
 			velocity.rotate(new FlxPoint(0, 0), _rot);
 			FlxG.collide(this, _walls);
-			animation.play("walk");
+			
+			if (!highPriorityAnimation()){
+				animation.play("run");
+			}
 		}
 		else {
 			velocity.set(0, 0);
-			animation.play("stand");
+			
+			if(!highPriorityAnimation()){
+				animation.play("idle");
+			}
 		}
 	}
 	
@@ -183,16 +196,31 @@ class Player extends FlxSprite {
 			cooldown = inviscooldown;
 			duration = 0;
 			this.alpha = 1;
+			
+			animation.play("reappear");
 		}
 		//If not currently invisible and cooldown is off, then turn it on
 		if (!invisible && cooldown == 0) {
 			invisible = true;
 			duration = 0;
 			this.alpha = 0.5;
+			
+			animation.play("vanish");
 		}
 	}
 	
 	public function isInvisible():Bool {
 		return invisible;
+	}
+	
+	public function isFrozen():Bool{
+		return frozen;
+	}
+	
+	function highPriorityAnimation():Bool {
+		return ((animation.name == "vanish" || 
+				animation.name == "reappear" || 
+				animation.name == "die") 
+				&& !animation.finished) || frozen;
 	}
 }

@@ -40,6 +40,8 @@ class EnemySoldier extends FlxSprite
 	
 	var spriteWidth:Int = 75;
 	var spriteHeight:Int = 75;
+	var graphicHeight:Int = 100;
+	var graphicWidth:Int = 100;
 	
 	var _player:Player;
 	var _tilemap:FlxTilemap;
@@ -88,6 +90,8 @@ class EnemySoldier extends FlxSprite
 		backtrackAddCountdown = backtrackAddTime;
 		
 		loadGraphic("assets/images/SENTRY.png", true, spriteWidth, spriteHeight);//temp animations
+		setGraphicSize(graphicWidth, graphicHeight);
+		updateHitbox();
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
 		setFacingFlip(FlxObject.UP, false, false);
@@ -126,7 +130,7 @@ class EnemySoldier extends FlxSprite
 		
 		//if player touches enemy while visible, player dies
 		if ( !_player.isInvisible() && FlxG.overlap(this, _player) ){
-			_player.die();
+			killPlayer();
 		}
 		
 		//on normal patrol
@@ -266,7 +270,7 @@ class EnemySoldier extends FlxSprite
 		if (aimCountdown <= 0){
 			aimCountdown = aimTime;
 			
-			_player.die();
+			killPlayer();
 		}
 		
 		playLockAnimation();
@@ -534,5 +538,11 @@ class EnemySoldier extends FlxSprite
 	
 	public function isOnAlert():Bool{
 		return onAlert;
+	}
+	
+	function killPlayer():Void{
+		if (!_player.isFrozen()){
+			_player.die();
+		}
 	}
 }
