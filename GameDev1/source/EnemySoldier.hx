@@ -295,8 +295,7 @@ class EnemySoldier extends FlxSprite
 		if (aimCountdown <= 0){
 			aimCountdown = aimTime;
 			
-            var beam:Beam = new Beam(this.getMidpoint(), _player.getMidpoint());
-            _state.add(beam);
+            FlxG.camera.flash(0x00ffff, 0.25);
 			killPlayer();
 		}
 		
