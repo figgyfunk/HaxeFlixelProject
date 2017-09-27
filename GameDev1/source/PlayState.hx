@@ -28,6 +28,7 @@ class PlayState extends FlxState
 
 	private var _backMusic:BackgroundMusic;
 	private var _alertMusic:BackgroundMusic;
+    private var _winJingle:FlxSound;
 	private var _lastFrameAlert:Bool = false;
 
 	override public function create():Void {
@@ -73,6 +74,7 @@ class PlayState extends FlxState
 		_alertMusic = new BackgroundMusic(AssetPaths.DetectTheme__wav, 90001);
 
 		_backMusic.play();
+        _winJingle = FlxG.sound.load(AssetPaths.winJingle__wav);
 
 		super.create();
 	}
@@ -170,6 +172,9 @@ class PlayState extends FlxState
 		if(_proceed){
 			//FlxG.switchState(new Play2State());
 			var text = new flixel.text.FlxText(0, 0, 0, "yay", 64);
+            _backMusic.stop();
+            _alertMusic.stop();
+            _winJingle.play();
 			text.screenCenter();
 			add(text);
 		}
