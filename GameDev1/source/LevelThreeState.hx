@@ -12,7 +12,7 @@ import openfl.Lib;
 import flixel.math.FlxPoint;
 
 
-class PlayState extends FlxState
+class LevelThreeState extends FlxState
 {
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
@@ -40,7 +40,7 @@ class PlayState extends FlxState
 		//copy this with correct file names to load levels
 
 		_fog = new FlxTypedGroup<Fog>();
-		_map = new FlxOgmoLoader(AssetPaths.level_2smallwall__oel);
+		_map = new FlxOgmoLoader(AssetPaths.level_3final__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "walls");
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
@@ -180,12 +180,11 @@ class PlayState extends FlxState
 
 		if(_proceed){
 			//FlxG.switchState(new Play2State());
-			var text = new flixel.text.FlxText(0, 0, 0, "yay", 64);
-            _backMusic.stop();
-            _alertMusic.stop();
-            _winJingle.play();
-			text.screenCenter();
-			add(text);
+
+      _backMusic.stop();
+      _alertMusic.stop();
+      _winJingle.play();
+			FlxG.switchState(new Cutscene02State());
 		}
 	}
 
