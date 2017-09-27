@@ -29,7 +29,31 @@
   </LevelValueDefinitions>
   <LayerDefinitions>
     <LayerDefinition xsi:type="TileLayerDefinition">
-      <Name>walls</Name>
+      <Name>bounce</Name>
+      <Grid>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>floor</Name>
+      <Grid>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>walls_1</Name>
       <Grid>
         <Width>128</Width>
         <Height>128</Height>
@@ -41,10 +65,94 @@
       <ExportMode>CSV</ExportMode>
     </LayerDefinition>
     <LayerDefinition xsi:type="TileLayerDefinition">
-      <Name>notouch</Name>
+      <Name>hiding_1</Name>
       <Grid>
-        <Width>3200</Width>
-        <Height>3200</Height>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>walls_2</Name>
+      <Grid>
+        <Width>128</Width>
+        <Height>128</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>hiding_2</Name>
+      <Grid>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>walls_3</Name>
+      <Grid>
+        <Width>128</Width>
+        <Height>128</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>hiding_3</Name>
+      <Grid>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>walls_4</Name>
+      <Grid>
+        <Width>128</Width>
+        <Height>128</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>hiding_4</Name>
+      <Grid>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>walls_5</Name>
+      <Grid>
+        <Width>128</Width>
+        <Height>128</Height>
       </Grid>
       <ScrollFactor>
         <X>1</X>
@@ -78,19 +186,8 @@
     <LayerDefinition xsi:type="EntityLayerDefinition">
       <Name>player</Name>
       <Grid>
-        <Width>50</Width>
-        <Height>50</Height>
-      </Grid>
-      <ScrollFactor>
-        <X>1</X>
-        <Y>1</Y>
-      </ScrollFactor>
-    </LayerDefinition>
-    <LayerDefinition xsi:type="EntityLayerDefinition">
-      <Name>enemy</Name>
-      <Grid>
-        <Width>75</Width>
-        <Height>75</Height>
+        <Width>70</Width>
+        <Height>70</Height>
       </Grid>
       <ScrollFactor>
         <X>1</X>
@@ -120,56 +217,29 @@
       <TileSep>0</TileSep>
     </Tileset>
     <Tileset>
-      <Name>1</Name>
-      <FilePath>..\images\level_1only.png</FilePath>
+      <Name>walls</Name>
+      <FilePath>..\images\square_wall_tiles.png</FilePath>
       <TileSize>
-        <Width>3200</Width>
-        <Height>3200</Height>
+        <Width>128</Width>
+        <Height>128</Height>
       </TileSize>
       <TileSep>0</TileSep>
     </Tileset>
     <Tileset>
-      <Name>2</Name>
-      <FilePath>..\images\level_2onlyfixed.png</FilePath>
+      <Name>hiding</Name>
+      <FilePath>..\images\floor_extra_square.png</FilePath>
       <TileSize>
-        <Width>3200</Width>
-        <Height>3200</Height>
+        <Width>64</Width>
+        <Height>64</Height>
       </TileSize>
       <TileSep>0</TileSep>
     </Tileset>
     <Tileset>
-      <Name>3</Name>
-      <FilePath>..\images\level_3only.png</FilePath>
-      <TileSize>
-        <Width>3200</Width>
-        <Height>3200</Height>
-      </TileSize>
-      <TileSep>0</TileSep>
-    </Tileset>
-    <Tileset>
-      <Name>4</Name>
-      <FilePath>..\images\level_4only.png</FilePath>
-      <TileSize>
-        <Width>3200</Width>
-        <Height>3200</Height>
-      </TileSize>
-      <TileSep>0</TileSep>
-    </Tileset>
-    <Tileset>
-      <Name>tiles</Name>
+      <Name>bounce</Name>
       <FilePath>..\images\place_holder.png</FilePath>
       <TileSize>
         <Width>16</Width>
         <Height>16</Height>
-      </TileSize>
-      <TileSep>0</TileSep>
-    </Tileset>
-    <Tileset>
-      <Name>walls</Name>
-      <FilePath>..\images\square_wall.png</FilePath>
-      <TileSize>
-        <Width>128</Width>
-        <Height>128</Height>
       </TileSize>
       <TileSep>0</TileSep>
     </Tileset>
@@ -192,8 +262,8 @@
     </EntityDefinition>
     <EntityDefinition Name="warpPad" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
       <Size>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>64</Width>
+        <Height>64</Height>
       </Size>
       <Origin>
         <X>0</X>
@@ -207,8 +277,8 @@
     </EntityDefinition>
     <EntityDefinition Name="player" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
       <Size>
-        <Width>50</Width>
-        <Height>50</Height>
+        <Width>70</Width>
+        <Height>70</Height>
       </Size>
       <Origin>
         <X>0</X>
@@ -216,21 +286,6 @@
       </Origin>
       <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
         <RectColor A="255" R="0" G="255" B="64" />
-      </ImageDefinition>
-      <ValueDefinitions />
-      <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
-    </EntityDefinition>
-    <EntityDefinition Name="enemy" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
-      <Size>
-        <Width>75</Width>
-        <Height>75</Height>
-      </Size>
-      <Origin>
-        <X>0</X>
-        <Y>0</Y>
-      </Origin>
-      <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
-        <RectColor A="255" R="255" G="128" B="255" />
       </ImageDefinition>
       <ValueDefinitions />
       <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
