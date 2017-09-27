@@ -6,6 +6,7 @@ import flixel.ui.FlxButton;
 import flixel.FlxG;
 import flixel.system.FlxSound;
 import openfl.Lib;
+import flixel.FlxSprite;
 
 /**
  * ...
@@ -13,7 +14,12 @@ import openfl.Lib;
  */
 class TitleScreen  extends FlxState
 {
-	private var _titleText:FlxText;
+	var imagesPath:String = "assets/images/titlescreen.png";
+	var imagesWidth:Int = 400;
+	var imagesHeight:Int = 300;
+	
+	var cutsceneSprite:FlxSprite;
+	
 	private var _startButton:FlxButton;
     private var _titleMusic:FlxSound;
     
@@ -23,11 +29,13 @@ class TitleScreen  extends FlxState
 		
 		FlxG.fullscreen = true;
 		
-		_titleText = new FlxText(20, 0, 0, "Game Title", 35);
-		_titleText.alignment = CENTER;
-		_titleText.screenCenter(X);
-		_titleText.y = _titleText.y + 20;
-		add(_titleText);
+		cutsceneSprite = new FlxSprite();
+		cutsceneSprite.loadGraphic(imagesPath, true, imagesWidth, imagesHeight);
+		cutsceneSprite.setGraphicSize(FlxG.width, FlxG.height);
+		cutsceneSprite.animation.add("titleImage", [0], 1, true);
+		cutsceneSprite.x = (FlxG.width-imagesWidth)/2;
+		cutsceneSprite.y = (FlxG.height-imagesHeight)/2;
+		add(cutsceneSprite);
 		
 		_startButton = new FlxButton(0, 0, "Start", clickPlay);
 		_startButton.x = (FlxG.width / 2) - _startButton.width/2 ;
@@ -44,9 +52,11 @@ class TitleScreen  extends FlxState
         {
             Lib.close();
         }
+		
+		cutsceneSprite.animation.play("titleImage");
 	}
 	
 	function clickPlay():Void{
-		FlxG.switchState(new FinalCutsceneState());
+		FlxG.switchState(new OpeningSceneState());
 	}
 }
