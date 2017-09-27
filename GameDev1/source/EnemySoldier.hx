@@ -550,7 +550,7 @@ class EnemySoldier extends FlxSprite
 		if (!onAlert && playerWithinFOVDistance()){
 			var rand:FlxRandom = new FlxRandom();
 			var index:Int = rand.int(0, _patrolSpeech.length - 1);
-			var bub:SpeechBubble = new SpeechBubble(this, 10, 10, 4, _patrolSpeech[index]);
+			var bub:SpeechBubble = new SpeechBubble(this, 4000, _patrolSpeech[index], 0xFF00FF00, 0xFFFF0000, _state);
 			_state.add(bub);
 		}
 	}
@@ -559,7 +559,7 @@ class EnemySoldier extends FlxSprite
 		if (onAlert && canSeePlayerCone()){
 			var rand:FlxRandom = new FlxRandom();
 			var index:Int = rand.int(0, _chaseSpeech.length - 1);
-			var bub:SpeechBubble = new SpeechBubble(this, 10, 10, 4, _chaseSpeech[index]);
+			var bub:SpeechBubble = new SpeechBubble(this, 4000, _chaseSpeech[index], 0xFF00FF00, 0xFFFF0000, _state);
 			_state.add(bub);
 		}
 	}
@@ -568,7 +568,7 @@ class EnemySoldier extends FlxSprite
 		if (onAlert && !canSeePlayerCone()){
 			var rand:FlxRandom = new FlxRandom();
 			var index:Int = rand.int(0, _searchSpeech.length - 1);
-			var bub:SpeechBubble = new SpeechBubble(this, 10, 10, 4, _searchSpeech[index]);
+			var bub:SpeechBubble = new SpeechBubble(this, 4000, _searchSpeech[index], 0xFF00FF00, 0xFFFF0000, _state);
 			_state.add(bub);
 		}
 	}
