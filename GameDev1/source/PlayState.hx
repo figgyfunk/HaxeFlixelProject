@@ -18,6 +18,7 @@ class PlayState extends FlxState
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
 	private var _decoration:FlxTilemap;
+	private var _fakeWarp:FlxTilemap;
 	private var _fog:FlxTypedGroup<Fog>;
 
 	private var _proceed:Bool = false;
@@ -42,29 +43,35 @@ class PlayState extends FlxState
 		//copy this with correct file names to load levels
 
 		_fog = new FlxTypedGroup<Fog>();
-		_map = new FlxOgmoLoader(AssetPaths.bigger_fog__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.place_holder_test__png, 64, 64, "walls");
+		_map = new FlxOgmoLoader(AssetPaths.level_2smallwall__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "walls");
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
+		_fakeWarp = _map.loadTilemap(AssetPaths.warp_pad__png, 64,64, "warp_dec");
+		add(_fakeWarp);
 
 		add(_mWalls);
-		_decoration = _map.loadTilemap(AssetPaths.level_1_fixed__png, 3200, 3200, "notouch");
+		_decoration = _map.loadTilemap(AssetPaths.level_2onlyfixed__png, 3200, 3200, "notouch");
 		add(_decoration);
 
 		_map.loadEntities(placeEntities, "warpPad");
 		add(_warpPad);
-		
+
+
 		_map.loadEntities(placeEntities, "player");
 		add(_player);
 		FlxG.camera.follow(_player);
         
+		_map.loadEntities(placeEntities, "fog");
+		add(_fog);
+
 		_soldiers = new Array<EnemySoldier>();
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
 		_soldiers.push(_soldier01);
 		add(_soldier01);
-		
+
 		_map.loadEntities(placeEntities, "fog");
 		add(_fog);
 
@@ -89,7 +96,7 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-        
+
         if(FlxG.keys.justPressed.ESCAPE)
         {
             Lib.close();
@@ -176,6 +183,8 @@ class PlayState extends FlxState
 		if(entityName == "player"){
 			_player = new Player(x,y,_mWalls,this);
 		}
+
+
 	}
 
 

@@ -65,6 +65,14 @@ class EnemySoldier extends FlxSprite
 	var velRotText:FlxText = new FlxText(10, 70, 300, "Velocity Rotation Text");//debug
 	
 	var _proxSound:ProximitySound;
+	
+	var _patrolSpeech:Array<String> = ["Lamda…Compute…”, “I aM RobOt.", "MastEr LikES soAp opErAs. MastEr iS FOamY..?", "EmoTiOnaL OutpUt ABovE QuotA."];
+	var _chaseSpeech:Array<String> = ["Must. Do. Duty.", "Target identified.", "Aim set. Vision status OK.", "LasEr ChARge: riSiNG."];
+	var _searchSpeech:Array<String> = ["Target X…null?", "VeLociTy cAPacitY iNsufFiciENt.", "eLecTrICaL sToRagE iNcOMplEte.", "RaY CanNot bE casT."];
+	var speechTime:Float=8;
+	var speechCountdown:Float;
+
+
     var _shootSound:FlxSound;
 
 	/*
@@ -90,6 +98,7 @@ class EnemySoldier extends FlxSprite
 		pursueIdleCountdown = pursueIdleTime;
 		pursueTurnCountdown = pursueTurnTime; 
 		backtrackAddCountdown = backtrackAddTime;
+		speechCountdown = speechTime;
 		
 		loadGraphic("assets/images/SENTRY.png", true, spriteWidth, spriteHeight);//temp animations
 		setGraphicSize(graphicWidth, graphicHeight);
@@ -127,6 +136,15 @@ class EnemySoldier extends FlxSprite
 		super.update(elapsed);
 		movement();
 		_proxSound.update(this.getMidpoint().x, this.getMidpoint().y);
+		
+		speechCountdown -= elapsed;
+		if (speechCountdown <= 0){
+			speechCountdown = speechTime;
+			
+			chaseSpeech();
+			searchSpeech();
+			isOnAlert();
+		}
 	}
 	
 	function movement():Void{
@@ -333,6 +351,9 @@ class EnemySoldier extends FlxSprite
 		}
 		
 		playIdleAnimation();
+		
+		speechTime-= FlxG.elapsed;
+		
 	}
 	
 	function playerWithinFOVDistance(){
@@ -525,21 +546,30 @@ class EnemySoldier extends FlxSprite
 		}
 	}
 	
-	function normalSpeech():Void{
+	function patrolSpeech():Void{
 		if (!onAlert && playerWithinFOVDistance()){
-			
+			var rand:FlxRandom = new FlxRandom();
+			var index:Int = rand.int(0, _patrolSpeech.length - 1);
+			var bub:SpeechBubble = new SpeechBubble(this, 4000, _patrolSpeech[index], 0xFF00FF00, 0xFFFF0000, _state);
+			_state.add(bub);
 		}
 	}
 	
 	function chaseSpeech():Void{
 		if (onAlert && canSeePlayerCone()){
-			
+			var rand:FlxRandom = new FlxRandom();
+			var index:Int = rand.int(0, _chaseSpeech.length - 1);
+			var bub:SpeechBubble = new SpeechBubble(this, 4000, _chaseSpeech[index], 0xFF00FF00, 0xFFFF0000, _state);
+			_state.add(bub);
 		}
 	}
 	
 	function searchSpeech():Void{
-		if (onAlert && canSeePlayerCone()){
-			
+		if (onAlert && !canSeePlayerCone()){
+			var rand:FlxRandom = new FlxRandom();
+			var index:Int = rand.int(0, _searchSpeech.length - 1);
+			var bub:SpeechBubble = new SpeechBubble(this, 4000, _searchSpeech[index], 0xFF00FF00, 0xFFFF0000, _state);
+			_state.add(bub);
 		}
 	}
 	
