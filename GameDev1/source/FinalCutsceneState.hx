@@ -92,6 +92,6 @@ class FinalCutsceneState extends FlxState
 	}
 	
 	function nextScene():Void{
-		FlxG.switchState(new TitleScreen());
+		FlxG.switchState(new PlayState());
 	}
 }
