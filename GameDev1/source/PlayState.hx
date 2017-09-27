@@ -43,7 +43,7 @@ class PlayState extends FlxState
 		//copy this with correct file names to load levels
 
 		_fog = new FlxTypedGroup<Fog>();
-		_map = new FlxOgmoLoader(AssetPaths.level_2smallwall__oel);
+		_map = new FlxOgmoLoader(AssetPaths.level_1__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "walls");
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
@@ -91,6 +91,7 @@ class PlayState extends FlxState
         _winJingle = FlxG.sound.load(AssetPaths.winJingle__wav);
 
 		super.create();
+        camera.fade(0x000000, 0.25, true);
 	}
 
 	override public function update(elapsed:Float):Void
