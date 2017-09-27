@@ -4,6 +4,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.FlxG;
+import flixel.system.FlxSound;
 
 /**
  * ...
@@ -13,7 +14,8 @@ class TitleScreen  extends FlxState
 {
 	private var _titleText:FlxText;
 	private var _startButton:FlxButton;
-
+    private var _titleMusic:FlxSound;
+    
 	override public function create():Void
 	{
 		super.create();
@@ -28,6 +30,8 @@ class TitleScreen  extends FlxState
 		_startButton.x = (FlxG.width / 2) - _startButton.width/2 ;
 		_startButton.y = FlxG.height - _startButton.height - 20;
 		add(_startButton);
+        _titleMusic = FlxG.sound.load(AssetPaths.titleTheme__wav);
+        _titleMusic.play();
 	}
 	
 	override public function update(elapsed:Float):Void

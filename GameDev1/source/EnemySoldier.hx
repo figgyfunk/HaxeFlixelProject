@@ -27,7 +27,7 @@ class EnemySoldier extends FlxSprite
 	var _arriveTolerance:Float = 10; //max distance from a point a point that the soldier is considered arrived
 									//too high causes clipping in position, too low causes overshooting
 
-	var aimTime:Float = 0.5; //time it takes for the soldier to aim and shoot the player
+	var aimTime:Float = 2.4; //time it takes for the soldier to aim and shoot the player
 	var patrolIdleTime:Float = 3; //time turing patrol that the soldier will stand sill before moving to next point
 	var pursueIdleTime:Float = 5; //time that the soldier will stay at the player's last known location when pursuing
 	var pursueTurnTime:Float = 1; //time between turns while the soldier is at last known player location when pursuing
@@ -173,8 +173,7 @@ class EnemySoldier extends FlxSprite
 			//if the player is in sight,
 			//the soldier is stationary while counting down to shoot
 			if (canSeePlayerCone()){
-                _shootSound.play();
-				_lastKnownPlayerPosition = _player.getPosition();
+                _lastKnownPlayerPosition = _player.getPosition();
 				_lastKnownPlayerDirection = FlxVelocity.velocityFromFacing(_player, FlxMath.MAX_VALUE_FLOAT);
 				aim();
 			}
@@ -263,7 +262,7 @@ class EnemySoldier extends FlxSprite
 		//aimCountdown= aimTime;
         if(aimCountdown == aimTime)
         {
-            _shootSound.play();
+            _shootSound.play(true);
         }
         actionText.text = "aiming";//debug
 		patrolIdleCountdown = patrolIdleTime;
