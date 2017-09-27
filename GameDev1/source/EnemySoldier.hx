@@ -12,6 +12,7 @@ import flixel.text.FlxText;
 import flixel.FlxState;
 import flixel.math.FlxVelocity;
 import flixel.math.FlxMath;
+import flixel.system.FlxSound;
 
 /**
  * ...
@@ -26,7 +27,7 @@ class EnemySoldier extends FlxSprite
 	var _arriveTolerance:Float = 10; //max distance from a point a point that the soldier is considered arrived
 									//too high causes clipping in position, too low causes overshooting
 
-	var aimTime:Float = 2; //time it takes for the soldier to aim and shoot the player
+	var aimTime:Float = 2.4; //time it takes for the soldier to aim and shoot the player
 	var patrolIdleTime:Float = 3; //time turing patrol that the soldier will stand sill before moving to next point
 	var pursueIdleTime:Float = 5; //time that the soldier will stay at the player's last known location when pursuing
 	var pursueTurnTime:Float = 1; //time between turns while the soldier is at last known player location when pursuing
@@ -65,22 +66,14 @@ class EnemySoldier extends FlxSprite
 	
 	var _proxSound:ProximitySound;
 	
-	var _patrolSpeech:Array<String> = [“Lamda…Compute…”,
-									“I aM RobOt.”,
-									“MastEr LikES soAp opErAs. MastEr iS FOamY..?”,
-									“EmoTiOnaL OutpUt ABovE QuotA.”]
-	var _chaseSpeech:Array<String> = [“Must. Do. Duty.”,
-										“Target identified.”,
-										“Aim set to 180. Vision status OK.”,
-										“LasEr ChARge: riSiNG.”]
-	var _searchSpeech:Array<String> = [“Target X…null?”,
-										“VeLociTy cAPacitY iNsufFiciENt.”,
-										“eLecTrICaL sToRagE iNcOMplEte.”,
-										“RaY CanNot bE casT.”]
+	var _patrolSpeech:Array<String> = ["Lamda…Compute…”, “I aM RobOt.", "MastEr LikES soAp opErAs. MastEr iS FOamY..?", "EmoTiOnaL OutpUt ABovE QuotA."];
+	var _chaseSpeech:Array<String> = ["Must. Do. Duty.", "Target identified.", "Aim set. Vision status OK.", "LasEr ChARge: riSiNG."];
+	var _searchSpeech:Array<String> = ["Target X…null?", "VeLociTy cAPacitY iNsufFiciENt.", "eLecTrICaL sToRagE iNcOMplEte.", "RaY CanNot bE casT."];
 	var speechTime:Float=8;
 	var speechCountdown:Float;
 
 
+    var _shootSound:FlxSound;
 
 	/*
 	 * arguments:
@@ -136,6 +129,7 @@ class EnemySoldier extends FlxSprite
 		_state.add(facingText);//debug
 		_state.add(faceRotText);//debug
 		_state.add(velRotText);//debug
+        _shootSound = FlxG.sound.load(AssetPaths.shoot__wav);
 	}
 	
 	override public function update(elapsed:Float):Void{
@@ -197,15 +191,14 @@ class EnemySoldier extends FlxSprite
 			//if the player is in sight,
 			//the soldier is stationary while counting down to shoot
 			if (canSeePlayerCone()){
-				actionText.text = "aiming";//debug
-				_lastKnownPlayerPosition = _player.getPosition();
+                _lastKnownPlayerPosition = _player.getPosition();
 				_lastKnownPlayerDirection = FlxVelocity.velocityFromFacing(_player, FlxMath.MAX_VALUE_FLOAT);
 				aim();
 			}
 			//if the player is out of sight
 			//engage pursue behavior
 			else{
-				
+				_shootSound.stop();
 				actionText.text = "pursue";//debug
 				pursue();
 			}
@@ -285,6 +278,11 @@ class EnemySoldier extends FlxSprite
 	function aim():Void{
 		
 		//aimCountdown= aimTime;
+        if(aimCountdown == aimTime)
+        {
+            _shootSound.play(true);
+        }
+        actionText.text = "aiming";//debug
 		patrolIdleCountdown = patrolIdleTime;
 		pursueIdleCountdown = pursueIdleTime;
 		pursueTurnCountdown = pursueTurnTime; 
@@ -354,7 +352,7 @@ class EnemySoldier extends FlxSprite
 		
 		playIdleAnimation();
 		
-		speechTime-= FlxG.elapesd;
+		speechTime-= FlxG.elapsed;
 		
 	}
 	
@@ -550,19 +548,28 @@ class EnemySoldier extends FlxSprite
 	
 	function patrolSpeech():Void{
 		if (!onAlert && playerWithinFOVDistance()){
-			
+			var rand:FlxRandom = new FlxRandom();
+			var index:Int = rand.int(0, _patrolSpeech.length - 1);
+			var bub:SpeechBubble = new SpeechBubble(this, 10, 10, 4, _patrolSpeech[index]);
+			_state.add(bub);
 		}
 	}
 	
 	function chaseSpeech():Void{
 		if (onAlert && canSeePlayerCone()){
-			
+			var rand:FlxRandom = new FlxRandom();
+			var index:Int = rand.int(0, _chaseSpeech.length - 1);
+			var bub:SpeechBubble = new SpeechBubble(this, 10, 10, 4, _chaseSpeech[index]);
+			_state.add(bub);
 		}
 	}
 	
 	function searchSpeech():Void{
 		if (onAlert && !canSeePlayerCone()){
-			
+			var rand:FlxRandom = new FlxRandom();
+			var index:Int = rand.int(0, _searchSpeech.length - 1);
+			var bub:SpeechBubble = new SpeechBubble(this, 10, 10, 4, _searchSpeech[index]);
+			_state.add(bub);
 		}
 	}
 	

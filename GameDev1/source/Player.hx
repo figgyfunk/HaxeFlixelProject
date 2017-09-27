@@ -10,6 +10,7 @@ import flixel.math.FlxAngle;
 import flixel.tile.FlxTilemap;
 import flixel.FlxState;
 import flixel.text.FlxText;
+import flixel.system.FlxSound;
 
 class Player extends FlxSprite {
 	var _walls:FlxTilemap;
@@ -28,11 +29,15 @@ class Player extends FlxSprite {
 
 	var spritewidth:Int = 100;
 	var spriteheight:Int = 100;
-	var graphicHeight:Int = 100;
-	var graphicWidth:Int = 100;
+	var graphicHeight:Int = 50;
+	var graphicWidth:Int = 50;
 
 	var visionradius:Int = 200;
 	var tilesize:Int = 16;
+    
+    var _cloakSound:FlxSound;
+	var _uncloakSound:FlxSound;
+    var _hurtSound:FlxSound;
 	
 	//cooldown in milliseconds
 	var inviscooldown:Int = 6000;
@@ -76,6 +81,11 @@ class Player extends FlxSprite {
 		state.add(rottext);
 		invistext = new FlxText(10, 110, 300, "");
 		state.add(invistext);
+        
+        //Sounds
+        _cloakSound = FlxG.sound.load(AssetPaths.cloak__wav);
+        _uncloakSound = FlxG.sound.load(AssetPaths.uncloak__wav);
+        _hurtSound = FlxG.sound.load(AssetPaths.hurt__wav, 0.75);
 	}
 
 	override public function update(elapsed:Float):Void {
@@ -108,6 +118,7 @@ class Player extends FlxSprite {
 		frozen = true;
 		//play dying animation
 		animation.play("die");
+        _hurtSound.play();
 	}
 	
 	function invisibility(elapsed:Float):Void {
@@ -215,6 +226,7 @@ class Player extends FlxSprite {
 			this.alpha = 1;
 			
 			animation.play("reappear");
+            _uncloakSound.play();
 		}
 		//If not currently invisible and cooldown is off, then turn it on
 		if (!invisible && cooldown == 0) {
@@ -223,6 +235,7 @@ class Player extends FlxSprite {
 			this.alpha = 0.5;
 			
 			animation.play("vanish");
+            _cloakSound.play();
 		}
 	}
 	
