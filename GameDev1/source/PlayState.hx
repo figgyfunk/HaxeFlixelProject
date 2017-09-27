@@ -40,8 +40,8 @@ class PlayState extends FlxState
 		//copy this with correct file names to load levels
 
 		_fog = new FlxTypedGroup<Fog>();
-		_map = new FlxOgmoLoader(AssetPaths.level_2__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.place_holder_test__png, 64, 64, "walls");
+		_map = new FlxOgmoLoader(AssetPaths.level_2smallwall__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "walls");
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
