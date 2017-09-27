@@ -244,6 +244,10 @@ class Player extends FlxSprite {
 		return frozen;
 	}
 	
+	public function freze():Void{
+        frozen = true;
+    }
+	
 	function highPriorityAnimation():Bool {
 		return ((animation.name == "vanish" || 
 				animation.name == "reappear" || 

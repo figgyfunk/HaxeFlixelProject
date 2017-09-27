@@ -295,6 +295,8 @@ class EnemySoldier extends FlxSprite
 		if (aimCountdown <= 0){
 			aimCountdown = aimTime;
 			
+            var beam:Beam = new Beam(this.getMidpoint(), _player.getMidpoint());
+            _state.add(beam);
 			killPlayer();
 		}
 		
@@ -580,6 +582,7 @@ class EnemySoldier extends FlxSprite
 	function killPlayer():Void{
 		if (!_player.isFrozen()){
 			_player.die();
+            _shootSound.stop();
 		}
 	}
 }
