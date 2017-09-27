@@ -10,6 +10,7 @@ import flixel.group.FlxGroup;
 import flixel.FlxG;
 import openfl.Lib;
 import flixel.math.FlxPoint;
+import flixel.FlxSprite;
 
 
 class PlayState extends FlxState
@@ -30,9 +31,11 @@ class PlayState extends FlxState
 	private var _alertMusic:BackgroundMusic;
     private var _winJingle:FlxSound;
 	private var _lastFrameAlert:Bool = false;
+    
+    private var _top:Float;
+    private var _left:Float;
 
 	override public function create():Void {
-		FlxG.resizeWindow(1280, 720);
 		FlxG.fullscreen = true;
 		//FlxG.camera.setSize(1280, 720);
 		FlxG.camera.setScale(.9,.9);
@@ -56,7 +59,7 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "player");
 		add(_player);
 		FlxG.camera.follow(_player);
-
+        
 		_soldiers = new Array<EnemySoldier>();
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
 		_soldiers.push(_soldier01);
@@ -65,10 +68,14 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "fog");
 		add(_fog);
 
-		FlxG.camera.bgColor = 0xFF555555;
-		FlxG.camera.zoom = 0.5;
+		camera.bgColor = 0xFF555555;
+		camera.zoom = 0.5;
 		FlxG.worldBounds.set(0, 0, _mWalls.width, _mWalls.height);
-		FlxG.camera.setScrollBoundsRect(0, 0, _mWalls.width, _mWalls.height);
+		camera.setScrollBoundsRect(0, 0, _mWalls.width, _mWalls.height);
+        
+        camera.update(0);
+        _left = camera.x;
+        _top = camera.y - camera.height/2;
 
 		_backMusic = new BackgroundMusic(AssetPaths.WalkTheme__wav, 5810, 34810);
 		_alertMusic = new BackgroundMusic(AssetPaths.DetectTheme__wav, 90001);
@@ -120,11 +127,18 @@ class PlayState extends FlxState
 		}
 
 		if( _fog.countLiving() == 0 ) {
-			_proceed = true;
+            if(!_proceed)
+            {
+                var goBar:FlxSprite = new FlxSprite(_left, _top, AssetPaths.UIBar__png);
+                goBar.setGraphicSize(camera.width * 2, 10);
+                goBar.scrollFactor.set(0, 0);
+                goBar.color = 0x00ff00;
+                add(goBar);
+                _proceed = true;
+            }
 		}
 
 		FlxG.overlap(_player, _warpPad, changeStage);
-
 	}
 
 	private function createEnemyPathDiamond():Array<FlxPoint>{
