@@ -52,10 +52,13 @@ class Player extends FlxSprite {
 	
 	var rottext:FlxText;
 	var invistext:FlxText;
+	
+	var State:FlxState;
 
 	public function new(startX:Int, startY:Int, walls:FlxTilemap, state:FlxState) {
 		super();
-
+		
+		State = state;
 		_walls = walls;
 		setPosition(startX, startY);
 		
@@ -100,9 +103,14 @@ class Player extends FlxSprite {
 			rottext.text = "DEAD";//debug
 			invistext.text = "DEAD";//debug
 		}
-		else{
+		else {
 			rottext.text = "player rot: " + Std.string(_rot);//debug
 			invistext.text = "invis: " + Std.string(invisible) + " " + Std.string(duration) + " " + Std.string(cooldown);//debug
+		}
+		
+		if (FlxG.keys.justPressed.T) {
+			var sb:SpeechBubble = new SpeechBubble(this, 0, -20, 3000, "Hello World!");
+			State.add(sb);
 		}
 	}
 	
@@ -114,6 +122,11 @@ class Player extends FlxSprite {
 	}
 	
 	function invisibility(elapsed:Float):Void {
+		//can't do anything when frozen!
+		if (frozen) {
+			return;
+		}
+		
 		//if invisible
 		if (invisible) {
 			//increment duration
@@ -163,10 +176,14 @@ class Player extends FlxSprite {
 			if (_down) {
 				yspeed += speed;
 			}
+			
 			//check if there is something ahead of direction
 			//pathblocked = overlapsAt(x + (xspeed / 60), y + (yspeed / 60), _walls);
+			
+			var destpoint = new FlxPoint(x + xspeed + (spritewidth / 2), y + yspeed + (spriteheight / 2));
+			
 			//calculate rotation angle
-			_rot = FlxAngle.angleBetweenPoint(this, new FlxPoint(x + xspeed + (spritewidth / 2), y + yspeed + (spriteheight / 2)), true);
+			_rot = FlxAngle.angleBetweenPoint(this, destpoint, true);
 			
 			//flip sprite when moving left/right
 			if (_rot < 90 && _rot > -90) {
@@ -183,7 +200,7 @@ class Player extends FlxSprite {
 			}
 			
 			//move it!
-			velocity.set(speed, 0);
+			velocity.set(FlxMath.distanceToPoint(this, destpoint), 0);
 			velocity.rotate(new FlxPoint(0, 0), _rot);
 			FlxG.collide(this, _walls);
 			
