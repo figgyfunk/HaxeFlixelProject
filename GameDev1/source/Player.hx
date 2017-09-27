@@ -14,7 +14,6 @@ import flixel.system.FlxSound;
 
 class Player extends FlxSprite {
 	var _walls:FlxTilemap;
-	public var playermap:PlayerMap;
 
 	public var _rot:Float = 0;
 	var _up:Bool = false;
@@ -74,8 +73,6 @@ class Player extends FlxSprite {
 		animation.add("run", [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], 20, true);
 		animation.add("vanish", [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44], 10, false);
 		
-		playermap = new PlayerMap(Std.int(1024 / tilesize), Std.int(768 / tilesize));
-		
 		//debugging text
 		rottext = new FlxText(10, 90, 300, "");
 		state.add(rottext);
@@ -109,7 +106,7 @@ class Player extends FlxSprite {
 		}
 		
 		if (FlxG.keys.justPressed.T) {
-			var sb:SpeechBubble = new SpeechBubble(this, 0, -20, 3000, "Hello World!");
+			var sb:SpeechBubble = new SpeechBubble(this, 3000, "Hello World!", 0xFF00FF00, 0xFFFF0000, State);
 			State.add(sb);
 		}
 	}
