@@ -31,8 +31,8 @@
     <LayerDefinition xsi:type="TileLayerDefinition">
       <Name>walls</Name>
       <Grid>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>128</Width>
+        <Height>128</Height>
       </Grid>
       <ScrollFactor>
         <X>1</X>
@@ -161,6 +161,15 @@
       <TileSize>
         <Width>16</Width>
         <Height>16</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+    <Tileset>
+      <Name>walls</Name>
+      <FilePath>..\images\square_wall.png</FilePath>
+      <TileSize>
+        <Width>128</Width>
+        <Height>128</Height>
       </TileSize>
       <TileSep>0</TileSep>
     </Tileset>

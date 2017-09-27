@@ -30,8 +30,8 @@ class Fog extends FlxSprite
         _wallFog = false;
         var tiles:Array<FlxPoint> = _walls.getTileCoords(2);
         for( tile in tiles ) {
-          if( getMidpoint().x+2 >=  tile.x && getMidpoint().x-1 <= tile.x) {
-              if( getMidpoint().y+2 >= tile.y && getMidpoint().y -1 <=tile.y ) {
+          if( getMidpoint().x+4 >=  tile.x && getMidpoint().x-4 <= tile.x) {
+              if( getMidpoint().y+4 >= tile.y && getMidpoint().y -4 <=tile.y ) {
                 _wallFog = true;
               }
           }
@@ -52,14 +52,14 @@ class Fog extends FlxSprite
         var blocked:Bool = _walls.ray(getMidpoint(), _player.getMidpoint());
         if(blocked){
           var distance = getMidpoint().distanceTo( _player.getMidpoint());
-          if(distance < 500){
+          if(distance < 350){
             return true;
           }
         }
 
         if( _wallFog) {
           var distance = getMidpoint().distanceTo( _player.getMidpoint());
-          if(distance < 500){
+          if(distance < 350){
             return true;
 
           }
