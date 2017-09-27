@@ -94,8 +94,7 @@ class LevelTwoState extends FlxState
 		add(_player);
 		FlxG.camera.follow(_player);
 
-		_map.loadEntities(placeEntities, "fog");
-		add(_fog);
+
 
 		_soldiers = new Array<EnemySoldier>();
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );

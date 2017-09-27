@@ -16,8 +16,19 @@ class LevelFourState extends FlxState
 {
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
-	private var _decoration:FlxTilemap;
+  private var _floor:FlxTilemap;
+    private var _walls_1:FlxTilemap;
+    private var _hiding_1:FlxTilemap;
+    private var _walls_2:FlxTilemap;
+    private var _hiding_2:FlxTilemap;
+    private var _walls_3:FlxTilemap;
+    private var _hiding_3:FlxTilemap;
+    private var _walls_4:FlxTilemap;
+    private var _hiding_4:FlxTilemap;
+    private var _walls_5:FlxTilemap;
 	private var _fakeWarp:FlxTilemap;
+  private var _top:Float;
+  private var _left:Float;
 	private var _fog:FlxTypedGroup<Fog>;
 
 	private var _proceed:Bool = false;
@@ -33,25 +44,45 @@ class LevelFourState extends FlxState
 	private var _lastFrameAlert:Bool = false;
 
 	override public function create():Void {
-		FlxG.resizeWindow(1280, 720);
-		FlxG.fullscreen = true;
+    FlxG.fullscreen = true;
 		//FlxG.camera.setSize(1280, 720);
 		FlxG.camera.setScale(.9,.9);
 		//copy this with correct file names to load levels
 
 		_fog = new FlxTypedGroup<Fog>();
 		_map = new FlxOgmoLoader(AssetPaths.level_4final__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "walls");
-		_mWalls.setTileProperties(2, FlxObject.ANY);
+		_mWalls = _map.loadTilemap(AssetPaths.place_holder__png, 16, 16, "bounce");
+		_mWalls.setTileProperties(1, FlxObject.ANY);
+        add(_mWalls);
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
+
+        _floor = _map.loadTilemap(AssetPaths.floor_extra_square__png, 64,64, "floor");
+        add(_floor);
+        _walls_1 = _map.loadTilemap(AssetPaths.square_wall_tiles__png, 128,128, "walls_1");
+        add(_walls_1);
+        _hiding_1 = _map.loadTilemap(AssetPaths.floor_extra_square__png,64,64, "hiding_1");
+        add(_hiding_1);
+
+        _hiding_2 = _map.loadTilemap(AssetPaths.floor_extra_square__png, 64,64, "hiding_2");
+        add(_hiding_2);
+        _walls_2 = _map.loadTilemap(AssetPaths.square_wall_tiles__png, 128,128, "walls_2");
+        add(_walls_2);
+        _hiding_3 = _map.loadTilemap(AssetPaths.floor_extra_square__png, 64,64,"hiding_3");
+        add(_hiding_3);
+        _walls_3 = _map.loadTilemap(AssetPaths.square_wall_tiles__png, 128,128, "walls_3");
+        add(_walls_3);
+        //_hiding_4 = _map.loadTilemap(AssetPaths.floor_extra_square__png, 128,128, "hiding_4");
+        _walls_4 = _map.loadTilemap(AssetPaths.square_wall_tiles__png, 128,128, "walls_4");
+        add(_walls_4);
+        _walls_5 = _map.loadTilemap(AssetPaths.square_wall_tiles__png, 128,128, "walls_5");
+        add(_walls_5);
 		_fakeWarp = _map.loadTilemap(AssetPaths.warp_pad__png, 64,64, "warp_dec");
 		add(_fakeWarp);
 
-		add(_mWalls);
-		_decoration = _map.loadTilemap(AssetPaths.level_2onlyfixed__png, 3200, 3200, "notouch");
-		add(_decoration);
+
+
 
 		_map.loadEntities(placeEntities, "warpPad");
 		add(_warpPad);
@@ -61,8 +92,7 @@ class LevelFourState extends FlxState
 		add(_player);
 		FlxG.camera.follow(_player);
 
-		_map.loadEntities(placeEntities, "fog");
-		add(_fog);
+
 
 		_soldiers = new Array<EnemySoldier>();
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
@@ -72,10 +102,14 @@ class LevelFourState extends FlxState
 		_map.loadEntities(placeEntities, "fog");
 		add(_fog);
 
-		FlxG.camera.bgColor = 0xFF555555;
-		FlxG.camera.zoom = 0.5;
+		camera.bgColor = 0xFF555555;
+		camera.zoom = 0.5;
 		FlxG.worldBounds.set(0, 0, _mWalls.width, _mWalls.height);
-		FlxG.camera.setScrollBoundsRect(0, 0, _mWalls.width, _mWalls.height);
+		camera.setScrollBoundsRect(0, 0, _mWalls.width, _mWalls.height);
+
+        camera.update(0);
+        _left = camera.x;
+        _top = camera.y - camera.height/2;
 
 		_backMusic = new BackgroundMusic(AssetPaths.WalkTheme__wav, 5810, 34810);
 		_alertMusic = new BackgroundMusic(AssetPaths.DetectTheme__wav, 90001);
@@ -84,6 +118,7 @@ class LevelFourState extends FlxState
         _winJingle = FlxG.sound.load(AssetPaths.winJingle__wav);
 
 		super.create();
+        camera.fade(0x000000, 0.25, true);
 	}
 
 	override public function update(elapsed:Float):Void
