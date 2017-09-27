@@ -46,7 +46,7 @@ class PlayState extends FlxState
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
-_fakeWarp = _map.loadTilemap(AssetPaths.warp_pad__png, 64,64, "warp_dec");
+		_fakeWarp = _map.loadTilemap(AssetPaths.warp_pad__png, 64,64, "warp_dec");
 		add(_fakeWarp);
 
 		add(_mWalls);
