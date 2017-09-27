@@ -9,9 +9,9 @@ import flixel.addons.display.FlxBackdrop;
  * ...
  * @author Alexander Christner & Brandon Ip
  */
-class CutsceneState extends FlxState
+class Cutscene01State extends FlxState
 {
-	var imagesPath:String = "assets/images/cutsceneTest.png";
+	var imagesPath:String = "assets/images/cutscenes/1/1.png";
 	var imagesWidth:Int = 400;
 	var imagesHeight:Int = 300;
 	
@@ -42,8 +42,9 @@ class CutsceneState extends FlxState
 		cutsceneSprite.loadGraphic(imagesPath, true, imagesWidth, imagesHeight);
 		cutsceneSprite.setGraphicSize(FlxG.width, FlxG.height);
 		imageStartTimes.push(0);
-		addScene("test", 0, 3);
-		addScene("dab", 1, 3);
+		// (name, frame of spritesheet, duration, must be in order)
+		addScene("1", 0, 3);
+		addScene("2", 1, 3);
 		cutsceneSprite.x = (FlxG.width-imagesWidth)/2;
 		cutsceneSprite.y = (FlxG.height-imagesHeight)/2;
 		//FlxG.camera.follow(cutsceneSprite);
@@ -73,7 +74,7 @@ class CutsceneState extends FlxState
 		}
 		
 		if (itr > sceneNames.length){
-			FlxG.switchState(new PlayState());
+			nextScene();
 		}
 	}
 	
@@ -85,6 +86,10 @@ class CutsceneState extends FlxState
 	}
 	
 	function clickSkip():Void{
-		FlxG.switchState(new PlayState());
+		nextScene();
+	}
+	
+	function nextScene():Void{
+		FlxG.switchState(new TitleScreen());
 	}
 }

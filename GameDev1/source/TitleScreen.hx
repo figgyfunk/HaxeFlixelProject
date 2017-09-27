@@ -47,6 +47,6 @@ class TitleScreen  extends FlxState
 	}
 	
 	function clickPlay():Void{
-		FlxG.switchState(new CutsceneState());
+		FlxG.switchState(new FinalCutsceneState());
 	}
 }
