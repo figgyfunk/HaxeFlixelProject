@@ -391,7 +391,7 @@ class EnemySoldier extends FlxSprite
 		//if the player is outside the soldier's viewAngle pointing where the soldier is facing,
 		//return false
 		var directionVec:FlxVector = _player.getMidpoint().toVector().subtractNew( getMidpoint().toVector() );
-		var facingVec = new FlxVector( Math.cos(_velRot * Math.PI / 180), Math.sin(_velRot* Math.PI / 180) );
+		var facingVec = new FlxVector( Math.cos(_faceRot * Math.PI / 180), Math.sin(_faceRot* Math.PI / 180) );
 		
 		var angleBetween:Float = directionVec.degreesBetween(facingVec);
 		if (angleBetween > FOV_Angle){
