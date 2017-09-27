@@ -10,6 +10,7 @@ import flixel.math.FlxAngle;
 import flixel.tile.FlxTilemap;
 import flixel.FlxState;
 import flixel.text.FlxText;
+import flixel.system.FlxSound;
 
 class Player extends FlxSprite {
 	var _walls:FlxTilemap;
@@ -26,11 +27,17 @@ class Player extends FlxSprite {
 	var yspeed:Float = 0;
 	var pathblocked:Bool = false;
 
-	var spritewidth:Int = 50;
-	var spriteheight:Int = 50;
+	var spritewidth:Int = 100;
+	var spriteheight:Int = 100;
+	var graphicHeight:Int = 50;
+	var graphicWidth:Int = 50;
 
 	var visionradius:Int = 200;
 	var tilesize:Int = 16;
+    
+    var _cloakSound:FlxSound;
+	var _uncloakSound:FlxSound;
+    var _hurtSound:FlxSound;
 	
 	//cooldown in milliseconds
 	var inviscooldown:Int = 6000;
@@ -45,19 +52,27 @@ class Player extends FlxSprite {
 	
 	var rottext:FlxText;
 	var invistext:FlxText;
+	
+	var State:FlxState;
 
 	public function new(startX:Int, startY:Int, walls:FlxTilemap, state:FlxState) {
 		super();
-
+		
+		State = state;
 		_walls = walls;
 		setPosition(startX, startY);
 		
 		//animations
 		loadGraphic("assets/images/delta.png", true, spritewidth, spriteheight);
+		setGraphicSize(graphicWidth, graphicHeight);
+		updateHitbox();
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
-		animation.add("walk", [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 20, true);
-		animation.add("stand", [0,1,2,3,4,5], 5, true);
+		animation.add("die", [0, 1, 2, 3, 4, 5, 6, 7], 8, false);
+		animation.add("idle", [8, 9, 10, 11, 12, 13], 10, true);
+		animation.add("reappear", [14, 15, 16, 17, 18], 8, false);
+		animation.add("run", [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], 20, true);
+		animation.add("vanish", [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44], 10, false);
 		
 		playermap = new PlayerMap(Std.int(1024 / tilesize), Std.int(768 / tilesize));
 		
@@ -66,15 +81,19 @@ class Player extends FlxSprite {
 		state.add(rottext);
 		invistext = new FlxText(10, 110, 300, "");
 		state.add(invistext);
+        
+        //Sounds
+        _cloakSound = FlxG.sound.load(AssetPaths.cloak__wav);
+        _uncloakSound = FlxG.sound.load(AssetPaths.uncloak__wav);
+        _hurtSound = FlxG.sound.load(AssetPaths.hurt__wav, 0.75);
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 		poll();
-		movement();
-		//detect();
 		invisibility(elapsed);
-		
+		movement();
+			
 		//If killed, reset level after a set duration
 		if (frozen) {
 			frozenelapsed = frozenelapsed + Std.int(elapsed * 1000);
@@ -84,18 +103,30 @@ class Player extends FlxSprite {
 			rottext.text = "DEAD";//debug
 			invistext.text = "DEAD";//debug
 		}
-		else{
+		else {
 			rottext.text = "player rot: " + Std.string(_rot);//debug
 			invistext.text = "invis: " + Std.string(invisible) + " " + Std.string(duration) + " " + Std.string(cooldown);//debug
+		}
+		
+		if (FlxG.keys.justPressed.T) {
+			var sb:SpeechBubble = new SpeechBubble(this, 0, -20, 3000, "Hello World!");
+			State.add(sb);
 		}
 	}
 	
 	public function die():Void {
 		frozen = true;
 		//play dying animation
+		animation.play("die");
+        _hurtSound.play();
 	}
 	
 	function invisibility(elapsed:Float):Void {
+		//can't do anything when frozen!
+		if (frozen) {
+			return;
+		}
+		
 		//if invisible
 		if (invisible) {
 			//increment duration
@@ -145,10 +176,14 @@ class Player extends FlxSprite {
 			if (_down) {
 				yspeed += speed;
 			}
+			
 			//check if there is something ahead of direction
 			//pathblocked = overlapsAt(x + (xspeed / 60), y + (yspeed / 60), _walls);
+			
+			var destpoint = new FlxPoint(x + xspeed + (spritewidth / 2), y + yspeed + (spriteheight / 2));
+			
 			//calculate rotation angle
-			_rot = FlxAngle.angleBetweenPoint(this, new FlxPoint(x + xspeed + (spritewidth / 2), y + yspeed + (spriteheight / 2)), true);
+			_rot = FlxAngle.angleBetweenPoint(this, destpoint, true);
 			
 			//flip sprite when moving left/right
 			if (_rot < 90 && _rot > -90) {
@@ -165,14 +200,20 @@ class Player extends FlxSprite {
 			}
 			
 			//move it!
-			velocity.set(speed, 0);
+			velocity.set(FlxMath.distanceToPoint(this, destpoint), 0);
 			velocity.rotate(new FlxPoint(0, 0), _rot);
 			FlxG.collide(this, _walls);
-			animation.play("walk");
+			
+			if (!highPriorityAnimation()){
+				animation.play("run");
+			}
 		}
 		else {
 			velocity.set(0, 0);
-			animation.play("stand");
+			
+			if(!highPriorityAnimation()){
+				animation.play("idle");
+			}
 		}
 	}
 	
@@ -183,16 +224,33 @@ class Player extends FlxSprite {
 			cooldown = inviscooldown;
 			duration = 0;
 			this.alpha = 1;
+			
+			animation.play("reappear");
+            _uncloakSound.play();
 		}
 		//If not currently invisible and cooldown is off, then turn it on
 		if (!invisible && cooldown == 0) {
 			invisible = true;
 			duration = 0;
 			this.alpha = 0.5;
+			
+			animation.play("vanish");
+            _cloakSound.play();
 		}
 	}
 	
 	public function isInvisible():Bool {
 		return invisible;
+	}
+	
+	public function isFrozen():Bool{
+		return frozen;
+	}
+	
+	function highPriorityAnimation():Bool {
+		return ((animation.name == "vanish" || 
+				animation.name == "reappear" || 
+				animation.name == "die") 
+				&& !animation.finished) || frozen;
 	}
 }

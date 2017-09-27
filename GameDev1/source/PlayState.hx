@@ -8,8 +8,7 @@ import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.tile.FlxTilemap;
 import flixel.group.FlxGroup;
 import flixel.FlxG;
-
-
+import openfl.Lib;
 import flixel.math.FlxPoint;
 
 
@@ -21,9 +20,7 @@ class PlayState extends FlxState
 	private var _fakeWarp:FlxTilemap;
 	private var _fog:FlxTypedGroup<Fog>;
 
-
 	private var _proceed:Bool = false;
-
 
 	private var _player:Player;
 	private var _warpPad:WarpPad;
@@ -32,12 +29,13 @@ class PlayState extends FlxState
 
 	private var _backMusic:BackgroundMusic;
 	private var _alertMusic:BackgroundMusic;
+    private var _winJingle:FlxSound;
 	private var _lastFrameAlert:Bool = false;
 
-	override public function create():Void
-	{
-		//FlxG.camera.setSize(1000,1000);
-		FlxG.worldBounds.set(1000,1000);
+	override public function create():Void {
+		FlxG.resizeWindow(1280, 720);
+		FlxG.fullscreen = true;
+		//FlxG.camera.setSize(1280, 720);
 		FlxG.camera.setScale(.9,.9);
 		//copy this with correct file names to load levels
 
@@ -48,10 +46,9 @@ class PlayState extends FlxState
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
-
-
-		_fakeWarp = _map.loadTilemap(AssetPaths.warp_pad__png, 64,64, "warp_dec");
+_fakeWarp = _map.loadTilemap(AssetPaths.warp_pad__png, 64,64, "warp_dec");
 		add(_fakeWarp);
+
 		add(_mWalls);
 		_decoration = _map.loadTilemap(AssetPaths.level_2onlyfixed__png, 3200, 3200, "notouch");
 		add(_decoration);
@@ -67,18 +64,24 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "fog");
 		add(_fog);
 
-
 		_soldiers = new Array<EnemySoldier>();
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
 		_soldiers.push(_soldier01);
 		add(_soldier01);
 
+		_map.loadEntities(placeEntities, "fog");
+		add(_fog);
+
 		FlxG.camera.bgColor = 0xFF555555;
+		FlxG.camera.zoom = 0.5;
+		FlxG.worldBounds.set(0, 0, _mWalls.width, _mWalls.height);
+		FlxG.camera.setScrollBoundsRect(0, 0, _mWalls.width, _mWalls.height);
 
 		_backMusic = new BackgroundMusic(AssetPaths.WalkTheme__wav, 5810, 34810);
 		_alertMusic = new BackgroundMusic(AssetPaths.DetectTheme__wav, 90001);
 
 		_backMusic.play();
+        _winJingle = FlxG.sound.load(AssetPaths.winJingle__wav);
 
 		super.create();
 	}
@@ -86,6 +89,11 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+
+        if(FlxG.keys.justPressed.ESCAPE)
+        {
+            Lib.close();
+        }
 
 		//manage detected music
 		var oneAlerted:Bool = false;
@@ -173,6 +181,9 @@ class PlayState extends FlxState
 		if(_proceed){
 			//FlxG.switchState(new Play2State());
 			var text = new flixel.text.FlxText(0, 0, 0, "yay", 64);
+            _backMusic.stop();
+            _alertMusic.stop();
+            _winJingle.play();
 			text.screenCenter();
 			add(text);
 		}
