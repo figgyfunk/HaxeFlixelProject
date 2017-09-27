@@ -20,9 +20,7 @@ class PlayState extends FlxState
 	private var _decoration:FlxTilemap;
 	private var _fog:FlxTypedGroup<Fog>;
 
-
 	private var _proceed:Bool = false;
-
 
 	private var _player:Player;
 	private var _warpPad:WarpPad;
@@ -33,10 +31,10 @@ class PlayState extends FlxState
 	private var _alertMusic:BackgroundMusic;
 	private var _lastFrameAlert:Bool = false;
 
-	override public function create():Void
-	{
-		//FlxG.camera.setSize(1000,1000);
-		FlxG.worldBounds.set(1000,1000);
+	override public function create():Void {
+		FlxG.resizeWindow(1280, 720);
+		FlxG.fullscreen = true;
+		//FlxG.camera.setSize(1280, 720);
 		FlxG.camera.setScale(.9,.9);
 		//copy this with correct file names to load levels
 
@@ -47,8 +45,6 @@ class PlayState extends FlxState
 		//_wallGroup = new FlxTypedGroup<Wall>();
 		//add(_wallGroup);
 		//_map.loadEntities(placeEntities, "entities");
-
-
 
 		add(_mWalls);
 		_decoration = _map.loadTilemap(AssetPaths.level_1_fixed__png, 3200, 3200, "notouch");
@@ -61,18 +57,18 @@ class PlayState extends FlxState
 		add(_player);
 		FlxG.camera.follow(_player);
 
-
-
-		_map.loadEntities(placeEntities, "fog");
-		add(_fog);
-
-
 		_soldiers = new Array<EnemySoldier>();
 		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
 		_soldiers.push(_soldier01);
 		add(_soldier01);
+		
+		_map.loadEntities(placeEntities, "fog");
+		add(_fog);
 
 		FlxG.camera.bgColor = 0xFF555555;
+		FlxG.camera.zoom = 0.5;
+		FlxG.worldBounds.set(0, 0, _mWalls.width, _mWalls.height);
+		FlxG.camera.setScrollBoundsRect(0, 0, _mWalls.width, _mWalls.height);
 
 		_backMusic = new BackgroundMusic(AssetPaths.WalkTheme__wav, 5810, 34810);
 		_alertMusic = new BackgroundMusic(AssetPaths.DetectTheme__wav, 90001);
