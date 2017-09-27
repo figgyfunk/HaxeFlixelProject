@@ -242,9 +242,10 @@ class LevelThreeState extends FlxState
 		if(_proceed){
 			//FlxG.switchState(new Play2State());
 
-      _backMusic.stop();
-      _alertMusic.stop();
-      _winJingle.play();
+            _backMusic.stop();
+            _alertMusic.stop();
+            _winJingle.play();
+            Sys.sleep(4.3);
 			FlxG.switchState(new Cutscene02State());
 		}
 	}

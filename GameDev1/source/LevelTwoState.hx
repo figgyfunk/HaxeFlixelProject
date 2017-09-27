@@ -123,25 +123,6 @@ class LevelTwoState extends FlxState
             Lib.close();
         }
 
-		//manage detected music
-		var oneAlerted:Bool = false;
-		for(s in _soldiers){
-			if (s.isOnAlert()){
-				oneAlerted = true;
-				break;
-			}
-		}
-		if (oneAlerted && !_lastFrameAlert){
-			_backMusic.pause();
-			_alertMusic.play();
-			_lastFrameAlert = true;
-		}
-		else if ( !oneAlerted && _lastFrameAlert ){
-			_alertMusic.stop();
-			_backMusic.unpauseAndReset();
-			_lastFrameAlert = false;
-		}
-
 		//manage fog
 		for( fog in _fog.members ) {
 				if(fog.checkFog()){
@@ -207,9 +188,9 @@ class LevelTwoState extends FlxState
             _backMusic.stop();
             _alertMusic.stop();
             _winJingle.play();
+            Sys.sleep(4.3);
 			FlxG.switchState(new Cutscene01State());
 		}
 	}
-	
 
 }

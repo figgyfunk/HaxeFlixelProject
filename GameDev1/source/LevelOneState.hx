@@ -124,7 +124,7 @@ class LevelOneState extends FlxState
 		_alertMusic = new BackgroundMusic(AssetPaths.DetectTheme__wav, 90001);
 
 		_backMusic.play();
-        _winJingle = FlxG.sound.load(AssetPaths.winJingle__wav);
+        _winJingle = FlxG.sound.load(AssetPaths.WinGameJingle__wav);
 
 		super.create();
         camera.fade(0x000000, 0.25, true);
@@ -245,6 +245,7 @@ class LevelOneState extends FlxState
       _backMusic.stop();
       _alertMusic.stop();
       _winJingle.play();
+      Sys.sleep(7.25);
 			FlxG.switchState(new FinalCutsceneState());
 		}
 	}

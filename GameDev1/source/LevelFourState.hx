@@ -219,10 +219,10 @@ class LevelFourState extends FlxState
 	
 	private function enemyPath04():Array<FlxPoint>{
 		var result:Array<FlxPoint> = new Array<FlxPoint>();
-		result.push(new FlxPoint(1600, 896));
-		result.push(new FlxPoint(1456, 896));
+		result.push(new FlxPoint(1696, 860));
+		result.push(new FlxPoint(1456, 860));
 		result.push(new FlxPoint(1456, 832));
-		result.push(new FlxPoint(1600, 832));
+		result.push(new FlxPoint(1696, 832));
 		return result;
 	}
 
@@ -254,9 +254,10 @@ class LevelFourState extends FlxState
 		if(_proceed){
 			//FlxG.switchState(new Play2State());
 
-      _backMusic.stop();
-      _alertMusic.stop();
-      _winJingle.play();
+            _backMusic.stop();
+            _alertMusic.stop();
+            _winJingle.play();
+            Sys.sleep(4.3);
 			FlxG.switchState(new LevelThreeState());
 		}
 	}

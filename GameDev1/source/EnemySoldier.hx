@@ -85,6 +85,7 @@ class EnemySoldier extends FlxSprite
 		_player = player;
 		_tilemap = map;
 		_path = path;
+        _state = state;
 		
 		_moveTowardIndex = 0;
 		_backtrackPath = new Array<FlxPoint>();
@@ -128,6 +129,7 @@ class EnemySoldier extends FlxSprite
 		movement();
 		_proxSound.update(this.getMidpoint().x, this.getMidpoint().y);
 		
+        
 		speechCountdown -= elapsed;
 		if (speechCountdown <= 0){
 			speechCountdown = speechTime;
@@ -136,6 +138,7 @@ class EnemySoldier extends FlxSprite
 			searchSpeech();
 			isOnAlert();
 		}
+		
 	}
 	
 	function movement():Void{
