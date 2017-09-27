@@ -21,8 +21,8 @@ import flixel.system.FlxSound;
 class EnemySoldier extends FlxSprite
 {
 	var walkSpeed:Float = 150; //pixels per second
-	var runSpeed:Float = 200; //pixels per second
-	var FOV_Distance:Float = 10000; //max distance from soldier that it can se player
+	var runSpeed:Float = 250; //pixels per second
+	var FOV_Distance:Float = 500; //max distance from soldier that it can se player
 	var FOV_Angle:Float = 30; //max angle away from soldier's facing direction that it can see player IN DEGREES
 	var _arriveTolerance:Float = 10; //max distance from a point a point that the soldier is considered arrived
 									//too high causes clipping in position, too low causes overshooting
@@ -59,11 +59,6 @@ class EnemySoldier extends FlxSprite
 	
 	var _state:FlxState;
 	
-	var actionText:FlxText = new FlxText(10, 10, 300, "Debug Text");//debug
-	var facingText:FlxText = new FlxText(10, 30, 300, "Facing Text");//debug
-	var faceRotText:FlxText = new FlxText(10, 50, 300, "Facing Rotation Text");//debug
-	var velRotText:FlxText = new FlxText(10, 70, 300, "Velocity Rotation Text");//debug
-	
 	var _proxSound:ProximitySound;
 	
 	var _patrolSpeech:Array<String> = ["Lamda…Compute…”, “I aM RobOt.", "MastEr LikES soAp opErAs. MastEr iS FOamY..?", "EmoTiOnaL OutpUt ABovE QuotA."];
@@ -71,6 +66,7 @@ class EnemySoldier extends FlxSprite
 	var _searchSpeech:Array<String> = ["Target X…null?", "VeLociTy cAPacitY iNsufFiciENt.", "eLecTrICaL sToRagE iNcOMplEte.", "RaY CanNot bE casT."];
 	var speechTime:Float=8;
 	var speechCountdown:Float;
+    var _shot:Bool = false;
 
 
     var _shootSound:FlxSound;
@@ -124,11 +120,6 @@ class EnemySoldier extends FlxSprite
 		
 		drag.x = drag.y = 2000;
 		
-		_state = state;//debug
-		_state.add(actionText);//debug
-		_state.add(facingText);//debug
-		_state.add(faceRotText);//debug
-		_state.add(velRotText);//debug
         _shootSound = FlxG.sound.load(AssetPaths.shoot__wav);
 	}
 	
@@ -167,13 +158,13 @@ class EnemySoldier extends FlxSprite
 			//if the player needs to return to it's patrol bath,
 			//follow the packtrack path
 			else if (_backtrackPath.length > 0){
-				actionText.text = "backtrack";//debug
+				
 				backtrack();
 			}
 			//if the player is not in sight
 			//engage ordinary patrol navigation behavior
 			else{
-				actionText.text = "patrol";//debug
+				
 				patrol();
 			}
 		}
@@ -199,13 +190,12 @@ class EnemySoldier extends FlxSprite
 			//engage pursue behavior
 			else{
 				_shootSound.stop();
-				actionText.text = "pursue";//debug
+				
 				pursue();
 			}
 		}
 		
-		velRotText.text = Std.string(_velRot);//debug
-		faceRotText.text = Std.string(_faceRot);//debug
+		
 	}
 	
 	//walk along the path given by the _path variable
@@ -282,7 +272,7 @@ class EnemySoldier extends FlxSprite
         {
             _shootSound.play(true);
         }
-        actionText.text = "aiming";//debug
+        
 		patrolIdleCountdown = patrolIdleTime;
 		pursueIdleCountdown = pursueIdleTime;
 		pursueTurnCountdown = pursueTurnTime; 
@@ -293,10 +283,13 @@ class EnemySoldier extends FlxSprite
 		//if the soldier has been aiming for 
 		aimCountdown -= FlxG.elapsed;
 		if (aimCountdown <= 0){
-			aimCountdown = aimTime;
+			//aimCountdown = aimTime;
 			
-            FlxG.camera.flash(0x00ffff, 0.25);
-			killPlayer();
+            if(!_shot)
+            {
+                FlxG.camera.flash(0x00ffff, 0.25);
+            }
+            killPlayer();
 		}
 		
 		playLockAnimation();
@@ -394,7 +387,7 @@ class EnemySoldier extends FlxSprite
 		//if the player is outside the soldier's viewAngle pointing where the soldier is facing,
 		//return false
 		var directionVec:FlxVector = _player.getMidpoint().toVector().subtractNew( getMidpoint().toVector() );
-		var facingVec = new FlxVector( Math.cos(_faceRot * Math.PI / 180), Math.sin(_faceRot* Math.PI / 180) );
+		var facingVec = new FlxVector( Math.cos(_velRot * Math.PI / 180), Math.sin(_velRot* Math.PI / 180) );
 		
 		var angleBetween:Float = directionVec.degreesBetween(facingVec);
 		if (angleBetween > FOV_Angle){
@@ -474,25 +467,25 @@ class EnemySoldier extends FlxSprite
 	function faceUp():Void{
 		facing = FlxObject.UP;
 		_faceRot = 270;
-		facingText.text = "Face Up";//debug
+		
 	}
 	
 	function faceDown():Void{
 		facing = FlxObject.DOWN;
 		_faceRot = 90;
-		facingText.text = "Face Down";//debug
+		
 	}
 	
 	function faceLeft():Void{
 		facing = FlxObject.LEFT;
 		_faceRot = 180;
-		facingText.text = "Face Left";//debug
+		
 	}
 	
 	function faceRight():Void{
 		facing = FlxObject.RIGHT;
 		_faceRot = 0;
-		facingText.text = "Face Right";//debug
+		
 	}
 	
 	//true if point is above this object's location

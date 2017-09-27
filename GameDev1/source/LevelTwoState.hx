@@ -34,8 +34,6 @@ class LevelTwoState extends FlxState
 
 	private var _player:Player;
 	private var _warpPad:WarpPad;
-	private var _soldier01:EnemySoldier;
-	private var _soldiers:Array<EnemySoldier>;
 
 	private var _backMusic:BackgroundMusic;
 	private var _alertMusic:BackgroundMusic;
@@ -93,13 +91,6 @@ class LevelTwoState extends FlxState
 		_map.loadEntities(placeEntities, "player");
 		add(_player);
 		FlxG.camera.follow(_player);
-
-
-
-		_soldiers = new Array<EnemySoldier>();
-		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
-		_soldiers.push(_soldier01);
-		add(_soldier01);
 
 		_map.loadEntities(placeEntities, "fog");
 		add(_fog);
@@ -178,22 +169,10 @@ class LevelTwoState extends FlxState
 		FlxG.overlap(_player, _warpPad, changeStage);
 	}
 
-	private function createEnemyPathDiamond():Array<FlxPoint>{
+	private function createEnemyPath():Array<FlxPoint>{
 		var result:Array<FlxPoint> = new Array<FlxPoint>();
-		result.push(new FlxPoint(300, 60));
 		result.push(new FlxPoint(512, 200));
 		result.push(new FlxPoint(300, 385));
-		result.push(new FlxPoint(80, 200));
-		return result;
-	}
-
-	private function createEnemyPathRectangle():Array<FlxPoint>{
-
-		var result:Array<FlxPoint> = new Array<FlxPoint>();
-		result.push(new FlxPoint(32, 32));
-		result.push(new FlxPoint(512, 32));
-		result.push(new FlxPoint(512, 385));
-		result.push(new FlxPoint(32, 385));
 		return result;
 	}
 
@@ -228,8 +207,9 @@ class LevelTwoState extends FlxState
             _backMusic.stop();
             _alertMusic.stop();
             _winJingle.play();
-			FlxG.switchState(new LevelThreeState());
+			FlxG.switchState(new Cutscene01State());
 		}
 	}
+	
 
 }

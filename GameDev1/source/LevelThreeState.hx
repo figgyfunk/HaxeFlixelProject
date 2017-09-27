@@ -10,6 +10,7 @@ import flixel.group.FlxGroup;
 import flixel.FlxG;
 import openfl.Lib;
 import flixel.math.FlxPoint;
+import flixel.FlxSprite;
 
 
 class LevelThreeState extends FlxState
@@ -36,6 +37,8 @@ class LevelThreeState extends FlxState
 	private var _player:Player;
 	private var _warpPad:WarpPad;
 	private var _soldier01:EnemySoldier;
+    private var _soldier02:EnemySoldier;
+    private var _soldier03:EnemySoldier;
 	private var _soldiers:Array<EnemySoldier>;
 
 	private var _backMusic:BackgroundMusic;
@@ -95,9 +98,16 @@ class LevelThreeState extends FlxState
 
 
 		_soldiers = new Array<EnemySoldier>();
-		_soldier01 = new EnemySoldier(_player, _mWalls, createEnemyPathRectangle(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
+		_soldier01 = new EnemySoldier(_player, _mWalls, enemyPath01(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
+        _soldier02 = new EnemySoldier(_player, _mWalls, enemyPath02(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
+        _soldier03 = new EnemySoldier(_player, _mWalls, enemyPath03(), this, new ProximitySound(AssetPaths.Powerup21__wav, 0, 0, _player, 250, 0.5) );
 		_soldiers.push(_soldier01);
+        _soldiers.push(_soldier02);
+        _soldiers.push(_soldier03);
 		add(_soldier01);
+        add(_soldier02);
+        add(_soldier03);
+        
 
 		_map.loadEntities(placeEntities, "fog");
 		add(_fog);
@@ -162,31 +172,47 @@ class LevelThreeState extends FlxState
 		}
 
 		if( _fog.countLiving() == 0 ) {
-			_proceed = true;
+			if(!_proceed)
+            {
+                var goBar:FlxSprite = new FlxSprite(_left, _top, AssetPaths.UIBar__png);
+                goBar.setGraphicSize(camera.width * 2, 10);
+                goBar.scrollFactor.set(0, 0);
+                goBar.color = 0x00ff00;
+                add(goBar);
+                _proceed = true;
+            }
 		}
 
 		FlxG.overlap(_player, _warpPad, changeStage);
 
 	}
 
-	private function createEnemyPathDiamond():Array<FlxPoint>{
+	private function enemyPath01():Array<FlxPoint>{
 		var result:Array<FlxPoint> = new Array<FlxPoint>();
-		result.push(new FlxPoint(300, 60));
-		result.push(new FlxPoint(512, 200));
-		result.push(new FlxPoint(300, 385));
-		result.push(new FlxPoint(80, 200));
+		result.push(new FlxPoint(416, 160));
+		result.push(new FlxPoint(464, 160));
+		result.push(new FlxPoint(464, 272));
+		result.push(new FlxPoint(416, 272));
 		return result;
 	}
-
-	private function createEnemyPathRectangle():Array<FlxPoint>{
-
+	
+	private function enemyPath02():Array<FlxPoint>{
 		var result:Array<FlxPoint> = new Array<FlxPoint>();
-		result.push(new FlxPoint(32, 32));
-		result.push(new FlxPoint(512, 32));
-		result.push(new FlxPoint(512, 385));
-		result.push(new FlxPoint(32, 385));
+		result.push(new FlxPoint(1232, 560));
+		result.push(new FlxPoint(1600, 560));
+		result.push(new FlxPoint(1600, 624));
+		result.push(new FlxPoint(1232, 624));
 		return result;
 	}
+	
+	private function enemyPath03():Array<FlxPoint>{
+		var result:Array<FlxPoint> = new Array<FlxPoint>();
+		result.push(new FlxPoint(1264, 304));
+		result.push(new FlxPoint(1712, 304));
+		result.push(new FlxPoint(1712, 336));
+		result.push(new FlxPoint(1264, 336));
+		return result;
+    }
 
 	private function placeEntities(entityName:String, entityData:Xml):Void
 	{

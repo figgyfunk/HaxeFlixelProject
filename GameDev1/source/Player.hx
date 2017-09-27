@@ -73,11 +73,7 @@ class Player extends FlxSprite {
 		animation.add("run", [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], 20, true);
 		animation.add("vanish", [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44], 10, false);
 		
-		//debugging text
-		rottext = new FlxText(10, 90, 300, "");
-		state.add(rottext);
-		invistext = new FlxText(10, 110, 300, "");
-		state.add(invistext);
+		
         
         //Sounds
         _cloakSound = FlxG.sound.load(AssetPaths.cloak__wav);
@@ -97,12 +93,7 @@ class Player extends FlxSprite {
 			if (frozenelapsed >= frozenduration) {
 				FlxG.resetState();
 			}
-			rottext.text = "DEAD";//debug
-			invistext.text = "DEAD";//debug
-		}
-		else {
-			rottext.text = "player rot: " + Std.string(_rot);//debug
-			invistext.text = "invis: " + Std.string(invisible) + " " + Std.string(duration) + " " + Std.string(cooldown);//debug
+			
 		}
 		
 		if (FlxG.keys.justPressed.T) {
@@ -149,9 +140,7 @@ class Player extends FlxSprite {
 		_right = FlxG.keys.anyPressed([RIGHT, D]);
 		toggleinvis = FlxG.keys.justPressed.SPACE;
 		
-		if (FlxG.keys.justPressed.D) {
-			die();
-		}
+		
 	}
 
 	function movement():Void {

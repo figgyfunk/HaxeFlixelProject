@@ -90,6 +90,6 @@ class Cutscene01State extends FlxState
 	}
 
 	function nextScene():Void{
-		FlxG.switchState(new LevelTwoState());
+		FlxG.switchState(new LevelFourState());
 	}
 }
