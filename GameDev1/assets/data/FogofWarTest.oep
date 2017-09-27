@@ -52,6 +52,18 @@
       </ScrollFactor>
       <ExportMode>CSV</ExportMode>
     </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>warp_dec</Name>
+      <Grid>
+        <Width>64</Width>
+        <Height>64</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
     <LayerDefinition xsi:type="EntityLayerDefinition">
       <Name>warpPad</Name>
       <Grid>
@@ -108,8 +120,44 @@
       <TileSep>0</TileSep>
     </Tileset>
     <Tileset>
-      <Name>notouch</Name>
-      <FilePath>..\images\level_1_fixed.png</FilePath>
+      <Name>warp</Name>
+      <FilePath>..\images\warp_pad.png</FilePath>
+      <TileSize>
+        <Width>64</Width>
+        <Height>64</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+    <Tileset>
+      <Name>1</Name>
+      <FilePath>..\images\level_1only.png</FilePath>
+      <TileSize>
+        <Width>3200</Width>
+        <Height>3200</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+    <Tileset>
+      <Name>2</Name>
+      <FilePath>..\images\level_2onlyfixed.png</FilePath>
+      <TileSize>
+        <Width>3200</Width>
+        <Height>3200</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+    <Tileset>
+      <Name>3</Name>
+      <FilePath>..\images\level_3only.png</FilePath>
+      <TileSize>
+        <Width>3200</Width>
+        <Height>3200</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+    <Tileset>
+      <Name>4</Name>
+      <FilePath>..\images\level_4only.png</FilePath>
       <TileSize>
         <Width>3200</Width>
         <Height>3200</Height>
