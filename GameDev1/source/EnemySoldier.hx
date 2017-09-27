@@ -295,6 +295,7 @@ class EnemySoldier extends FlxSprite
 		if (aimCountdown <= 0){
 			aimCountdown = aimTime;
 			
+            FlxG.camera.flash(0x00ffff, 0.25);
 			killPlayer();
 		}
 		
@@ -580,6 +581,7 @@ class EnemySoldier extends FlxSprite
 	function killPlayer():Void{
 		if (!_player.isFrozen()){
 			_player.die();
+            _shootSound.stop();
 		}
 	}
 }
