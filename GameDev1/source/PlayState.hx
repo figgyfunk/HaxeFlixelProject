@@ -8,8 +8,7 @@ import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.tile.FlxTilemap;
 import flixel.group.FlxGroup;
 import flixel.FlxG;
-
-
+import openfl.Lib;
 import flixel.math.FlxPoint;
 
 
@@ -81,6 +80,11 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+        
+        if(FlxG.keys.justPressed.ESCAPE)
+        {
+            Lib.close();
+        }
 
 		//manage detected music
 		var oneAlerted:Bool = false;

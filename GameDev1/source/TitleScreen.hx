@@ -5,6 +5,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.FlxG;
 import flixel.system.FlxSound;
+import openfl.Lib;
 
 /**
  * ...
@@ -37,6 +38,10 @@ class TitleScreen  extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+        if(FlxG.keys.justPressed.ESCAPE)
+        {
+            Lib.close();
+        }
 	}
 	
 	function clickPlay():Void{
