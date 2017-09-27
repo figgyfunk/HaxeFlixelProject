@@ -291,6 +291,7 @@ class EnemySoldier extends FlxSprite
             if(!_shot)
             {
                 FlxG.camera.flash(0x00ffff, 0.25);
+                _shot = true;
             }
             killPlayer();
 		}
