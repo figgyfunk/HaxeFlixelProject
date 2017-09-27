@@ -21,6 +21,8 @@ class TitleScreen  extends FlxState
 	{
 		super.create();
 		
+		FlxG.fullscreen = true;
+		
 		_titleText = new FlxText(20, 0, 0, "Game Title", 35);
 		_titleText.alignment = CENTER;
 		_titleText.screenCenter(X);
@@ -45,6 +47,6 @@ class TitleScreen  extends FlxState
 	}
 	
 	function clickPlay():Void{
-		FlxG.switchState(new PlayState());
+		FlxG.switchState(new CutsceneState());
 	}
 }
