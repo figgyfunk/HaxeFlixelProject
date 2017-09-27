@@ -100,8 +100,8 @@
     <LayerDefinition xsi:type="EntityLayerDefinition">
       <Name>fog</Name>
       <Grid>
-        <Width>64</Width>
-        <Height>64</Height>
+        <Width>128</Width>
+        <Height>128</Height>
       </Grid>
       <ScrollFactor>
         <X>1</X>
@@ -168,8 +168,8 @@
   <EntityDefinitions>
     <EntityDefinition Name="fog" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
       <Size>
-        <Width>64</Width>
-        <Height>64</Height>
+        <Width>128</Width>
+        <Height>128</Height>
       </Size>
       <Origin>
         <X>0</X>
